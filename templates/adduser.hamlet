@@ -1,0 +1,9 @@
+<div class="row">
+    <div class="col-md-8">
+        <input type=button value="首页" class="btn btn-success" onClick="location.href='@{HomeR}'">
+    <div class="col-md-8">
+        <h3>添加新的用户
+    <div class="col-md-8" id=#{addUserFormId}>
+        <form class="form-horizontal control-label" method=post action=@{AddUserR} enctype=#{formEnctype}>
+            ^{addUserWidget}
+            <input class="btn btn-primary" type="submit" value="保存">

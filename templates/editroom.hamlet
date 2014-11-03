@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-md-6">
+        <input type=button value="首页" class="btn btn-success" onClick="location.href='@{HomeR}'">
+        <input type=button value="返回" class="btn btn-info" onClick="location.href='@{ManageRoomR}'">         
+    <div class="col-md-6">
+    <div class="col-md-8" align="left">
+         <h3>编辑会议室: #{roomNumber roomInfo} 
+    <div class="col-md-4" align="left">
+
+    <div class="col-md-8" id=#{editRoomFormId}>
+        <form class="form-horizontal control-label" method=post action=@{FinishEditRoomR theId} enctype=#{formEnctype}>
+            ^{editRoomWidget}
+            <input class="btn btn-primary" type="submit" value="保存">
+        

@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="col-md-6">
+        <input type=button value="首页" class="btn btn-success" onClick="location.href='@{HomeR}'">
+    <div class="col-md-6">
+    <div class="col-md-8" align="left">
+         <h3>编辑用户: #{userEmail userInfo} 
+    <div class="col-md-4" align="left">
+
+    <div class="col-md-8" id=#{editUserFormId}>
+        <form class="form-horizontal control-label" method=post action=@{FinishEditUserR theId} enctype=#{formEnctype}>
+            ^{editUserWidget}
+            <input class="btn btn-primary" type="submit" value="保存">
+            <input type=button value="返回" class="btn btn-info" onClick="location.href='@{ManageUserR}'">         

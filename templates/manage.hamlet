@@ -1,0 +1,16 @@
+<br>
+<div class="row" id="manageDiv">
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-12" id="manage-slogan">
+                <pre><h4> 用户、会议室管理
+            <div class="col-md-12" id="manageNav">
+                <ul class="nav nav-pills nav-stacked">
+                    <li> 
+                        <a href=@{ManageRoomR}>会议室管理
+                    <li> 
+                        <a href=@{ManageUserR}>用户管理
+    <div class="col-md-9">
+        ^{listinfoWidget listLink editLink deleteLink dataType buttonName}
+        <input type=button value=#{buttonName} class="btn btn-primary" onClick="location.href='@{addLink }'">
+

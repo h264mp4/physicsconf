@@ -1,0 +1,132 @@
+$(document).ready(function() {
+    console.log("we start . . .");
+
+    // 1. some constant and helper functions
+    var infotype = "#{rawJS dataType}";
+    var editButtons = [];    
+    var deleteButtons = [];
+
+    function editDeleteFunc(value) {
+        var editItemId = "edit" + infotype + value;
+        console.log("real id is " + editItemId);
+        var deleteItemId = "delete" + infotype + value;
+        editButtons.push([editItemId, value]); 
+        deleteButtons.push([deleteItemId, value]); 
+
+        var deleteBtnPart = "<input type=button value='删除' id=" + deleteItemId + " class='btn btn-danger' >";
+        var editBtnPart = "<input type=button value='编辑' id=" + editItemId + " class='btn btn-warning' >";
+
+        return "<div> " + editBtnPart + deleteBtnPart + " </div>";
+    };
+
+    var titleColumns = [];
+    titleColumns["typeroom"] = [];
+    titleColumns["typeuser"] = [];
+
+    titleColumns["typeroom"].push({field: "会议室编号", title: "会议室编号", align:"center"});
+    titleColumns["typeroom"].push({field: "权限", title: "权限", align:"center"});
+    titleColumns["typeroom"].push({field: "启用", title: "启用", align:"center"});
+    titleColumns["typeroom"].push({field: "有效期", title: "有效期", align:"center"});
+    titleColumns["typeroom"].push({field: "sqlkey", title: " ", formatter: editDeleteFunc, align:"center"});
+
+    titleColumns["typeuser"].push({field: "Email", title: "Email", align:"center"});
+    titleColumns["typeuser"].push({field: "姓名", title: "姓名", align:"center"});
+    titleColumns["typeuser"].push({field: "权限", title: "权限", align:"center"});
+    titleColumns["typeuser"].push({field: "sqlkey", title: " ", formatter: editDeleteFunc, align:"center"});
+
+    function setupListTable() {
+        console.log("start setup dataTable.");
+
+        $("##{rawJS aRandomId}").bootstrapTable({
+            striped: true,
+            pagination: true,
+            showToggle: true,
+            showColumns: true,
+            cache: false,           
+
+            pageList: [10,120,30],
+
+            // below is the ajax query and response process.
+            url: "@{listLink}",
+            method: "GET",
+            contentType: "application/json",           
+            queryParams: function (params) {
+                params[infotype] = infotype; 
+                params["limit"] = 200;
+                console.log(params);
+                return params;
+            },
+
+            responseHandler: function(retData){
+                return retData.dataRows;
+            },
+
+            rowStyle: function (row, index) {
+                var classes = ['success', 'info', 'active', 'warning', 'danger'];
+                if (index % 2 === 0 && index / 2 < classes.length) {
+                    return {
+                        classes: classes[index / 2],
+                    };
+                }
+                return {};
+            },
+
+            onLoadSuccess: function() {
+                var i = 0;
+                for (i=0; i < editButtons.length; i++) {
+                    var key = editButtons[i][0];
+                    var val = editButtons[i][1];
+                    //console.log("EditButton" + i + ". Key: " + key + ", value: " + val);
+                    // use the closure to boost the var scope (using bv)
+                    (function(k, v){ 
+                        $("#"+k).click(function (){ 
+                            window.location.href = "@{editLink}/?editId"+"="+v;
+                        });
+                    })(key, val);
+                }
+                
+                for (i=0; i < deleteButtons.length; i++) {
+                    var key = deleteButtons[i][0];
+                    var val = deleteButtons[i][1];
+                    console.log("DeleteButton" + i + ". Key" + key + ", value" + val);
+         
+                    $("#"+key).attr({"btnid":key, "dbid":val});
+                    $("#"+key).click(function (){                        
+                        var bDelete = confirm("将永久的删除此条目");
+                        if (bDelete) {
+                            var jData = JSON.stringify({"deleteId" : $(this).attr("dbid")});
+                            $.ajax({
+                                processData: false,
+                                type: "DELETE",
+                                url: "@{deleteLink}",
+                                data: jData,
+                                dataType: "json",
+                                success: function(data) {
+                                    window.location.reload();
+                                    //window.location.href = window.location.href;
+                                }
+                            });
+                         }
+                    });
+                }
+            },
+
+            columns: titleColumns[infotype]
+
+        });
+
+        console.log("finish setup dataTable.");
+    };
+
+    function destroyDataTable() {
+        $("##{rawJS aRandomId}").bootstrapTable("destroy");
+        $("##{rawJS aRandomId}").empty(); // this line is crutial for recreate the table.
+    };
+      
+    // we setup the initial dataTable
+    setupListTable();
+
+    console.log("edit" + editButtons);
+    console.log("delete" + deleteButtons);
+
+});

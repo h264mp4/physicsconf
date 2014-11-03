@@ -1,0 +1,53 @@
+<br>
+<div class="row" id="cfcontent">
+    <div class="col-md-2" id="left-nav">
+        <div class="row" id="hello-section">
+             <div class="col-md-11">
+                  <pre><h5>你好, <b>wtl</b>
+
+        <div class="row" id="functionalities">
+            <div class="col-md-12">
+                <ul class="nav nav-pills nav-stacked">
+                    <li> 
+                        <a href="##">首页
+                    <li> 
+                        <a href="##">我的预订管理
+                    <li> 
+                        <a href="##">我的预订历史
+                    <li> 
+                        <a href="##">个人信息设置
+
+        <div class="row" id="separator">
+            <div class="col-md-12">
+                <br><hr width="80%">
+
+        <div class="row" id="intros">
+            <div class="col-md-12">
+                <ul class="nav nav-pills nav-stacked">
+                    <li> 
+                        <a href="##">会议室预订介绍
+                    <li> 
+                        <a href="##">其他介绍
+
+    <!-- the main content -->
+    <div class="col-md-10" id="maincontent">       
+        <div class="row">
+            <div class="col-md-8">
+                    <img class="left-align-pic" src="/static/images/select-date.png">
+                    <span class="bottom-align-text"> &nbsp按日期查询会议室预订情况
+        <div class="row">
+            <div class="col-md-12">
+                  <div id="myCalendarSelectDiv">
+        <div class="row">
+            <hr>
+            <div class="col-md-12"> 
+                <img class="left-align-pic" src="/static/images/show-date.png">
+                <span class="bottom-align-text" id="myShowDate"> 
+            <div class="col-md-12" > 
+                <br>
+            <div class="col-md-12" id="myTableDataDiv">
+                <table id="myTableDataReal">
+
+            <div class="col-md-12" align="left">
+                <input type=button value="新的预订" class="btn btn-primary" onClick="location.href='@{AddRoomR}'">
+

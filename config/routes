@@ -1,0 +1,25 @@
+/static StaticR Static getStatic
+/auth   AuthR   Auth   getAuth
+
+/favicon.ico FaviconR GET
+/robots.txt RobotsR GET
+
+/ HomeR GET POST
+/daybookingstatus DayBookingStatusR GET
+-- /dobooking DoBookingR GET POST
+
+/addroom AddRoomR GET POST
+/listroom ListRoomR GET
+/editroom EditRoomR GET
+/finisheditroom/#RoomId FinishEditRoomR POST
+/deleteroom DeleteRoomR DELETE
+
+/adduser AddUserR GET POST
+/listuser ListUserR GET
+/edituser EditUserR GET
+/finishedituser/#UserId FinishEditUserR POST
+/deleteuser DeleteUserR DELETE
+    
+/manage ManageR GET
+/manage/room ManageRoomR GET
+/manage/user ManageUserR GET

@@ -1,0 +1,20 @@
+Default: &defaults
+  database: confroom.sqlite3
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: confroom_test.sqlite3
+  <<: *defaults
+
+Staging:
+  database: confroom_staging.sqlite3
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: confroom_production.sqlite3
+  poolsize: 100
+  <<: *defaults
