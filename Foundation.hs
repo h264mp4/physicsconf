@@ -5,8 +5,6 @@ import Prelude
 import Yesod
 import Yesod.Static
 import Yesod.Auth
-import Yesod.Auth.Account
-import Yesod.Auth.BrowserId
 import Yesod.Form.Jquery(YesodJquery (..), jqueryDayField)
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
@@ -23,8 +21,10 @@ import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
 import Data.Time
 import Data.Int
+import Data.Text(Text)
 import System.Locale
 import Handler.MiscTypes
+import Handler.AuthConf
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -117,7 +117,7 @@ instance Yesod App where
     isAuthorized FaviconR _ = return Authorized
     isAuthorized RobotsR _ = return Authorized
     -- Default to Authorized for now.
-    isAuthorized _ _ = return Authorized
+    isAuthorized _ _ = return Authorized -- return $ Unauthorized "请先登录"
 
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
@@ -149,16 +149,15 @@ instance YesodPersistRunner App where
     getDBRunner = defaultGetDBRunner connPool
 
 instance YesodAuth App where
-    type AuthId App = Username
-    getAuthId = return . Just . credsIdent
+    type AuthId App = Text
     loginDest _ = HomeR
     logoutDest _ = HomeR
-    authPlugins _ = [] --accountPlugin
+    authPlugins _ = [authConf]
     authHttpManager _ = error "No manager needed"
     onLogin = return ()
-    maybeAuthId = lookupSession credsKey
+    getAuthId = return . Just . credsIdent
+    maybeAuthId = lookupSession credsKey --"__ID"
 
--- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
 instance RenderMessage App FormMessage where
     renderMessage _ _ = defaultFormMessage
@@ -179,22 +178,3 @@ getExtra = fmap (appExtra . settings) getYesod
 -- wiki:
 --
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
-
-{-
--- Account Plug In Instance
-instance AccountSendEmail App
-
-instance YesodAuthAccount (AccountPersistDB App User) App where
-    runAccountDB = runAccountPersistDB
-
-instance PersistUserCredentials User where
-    userUsernameF = UserName
-    userEmailF = UserEmail
-    userPasswordHashF = UserPassword
-    userLevelF = UserLevel
-    userResetPwdKeyF = UserResetPasswordKey
-    userFirstAddF = UserFirstAdd
-    uniqueEmail = UniqueEmail
-
-    userCreate name email pwd lev pwd utcT = User email pwd name AuthNormal key utcT
--}

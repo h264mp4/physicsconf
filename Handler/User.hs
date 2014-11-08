@@ -134,7 +134,6 @@ addUserForm = renderBootstrap3 simpleFormLayoutForAddUser $ User
         <*> areq textField "密码" (Just "physics")
         <*> areq textField "姓名" Nothing
         <*> areq (selectFieldList authLevel) "权限" Nothing
-        <*> pure "" -- areq textField "resetKey" (Just "physics")
         <*> lift (liftIO getCurrentTime)
 
 editUserForm :: User -> Form User
@@ -143,7 +142,6 @@ editUserForm userInfo = renderBootstrap3 simpleFormLayoutForAddUser $ User
         <*> areq textField "密码" (Just $ userPassword userInfo)
         <*> areq textField "姓名" (Just $ userName userInfo)
         <*> areq (selectFieldList authLevel) "权限" (Just $ userLevel userInfo)
-        <*> pure "" -- areq textField "resetKey" (Just "physics")
         <*> pure (userFirstAdd userInfo)
 
 toHtmlUserInfo :: User -> Text

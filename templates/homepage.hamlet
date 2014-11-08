@@ -3,8 +3,8 @@
     <div class="col-md-2" id="left-nav">
         <div class="row" id="hello-section">
              <div class="col-md-11">
-                  <pre><h5>你好, <b>wtl</b>
-
+                  <pre><h5>你好
+                  <p> <a href=@{AuthR LoginR}> 请登入
         <div class="row" id="functionalities">
             <div class="col-md-12">
                 <ul class="nav nav-pills nav-stacked">

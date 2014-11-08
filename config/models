@@ -3,7 +3,6 @@ User
     password Text
     name Text
     level Level
-    resetPasswordKey Text
     firstAdd UTCTime
     UniqueEmail email
     deriving Show

@@ -10,7 +10,7 @@ import Text.Julius(rawJS)
 import Data.Maybe(fromJust)
 import Data.Aeson(object, (.=))
 import Network.Wai
-
+import Yesod.Auth
 
 -- This is a handler function for the GET request method on the HomeR
 -- resource pattern. All of your resource patterns are defined in
@@ -25,8 +25,6 @@ import Network.Wai
                    -- lift io to the current monad layer
         Nothing -> liftIO $ print "Nothing to be delete, cannot find peng@123.com"
         Just theId -> runDB $ deleteUser theId
--}
-
 
 testUser t1 = User "peng_pxt@163.com" "hah" "peng" AuthNormal "wahtandwhat" t1
 testRoom t1 t2 = Room "1001" AuthNormal True t1 t2 
@@ -35,6 +33,7 @@ testBookingRoom aDay curTime t1 = do
     mayUserId <- runDB $ addNewUser (testUser t1)
     mayRoomId <- runDB $ addNewRoom (testRoom aDay t1)
     runDB $ bookingRoom (fromJust mayUserId) (fromJust mayRoomId) aDay (Timespan curTime curTime)
+-}
     
 getHomeR :: Handler Html
 getHomeR = do

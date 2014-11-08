@@ -231,13 +231,6 @@
   (major1) == 1 && (major2) <  4 || \
   (major1) == 1 && (major2) == 4 && (minor) <= 0)
 
-/* package yesod-auth-account-1.4.0 */
-#define VERSION_yesod_auth_account "1.4.0"
-#define MIN_VERSION_yesod_auth_account(major1,major2,minor) (\
-  (major1) <  1 || \
-  (major1) == 1 && (major2) <  4 || \
-  (major1) == 1 && (major2) == 4 && (minor) <= 0)
-
 /* package yesod-core-1.4.3 */
 #define VERSION_yesod_core "1.4.3"
 #define MIN_VERSION_yesod_core(major1,major2,minor) (\
@@ -314,6 +307,13 @@
   (major1) <  0 || \
   (major1) == 0 && (major2) <  67 || \
   (major1) == 0 && (major2) == 67 && (minor) <= 0)
+
+/* tool hscolour-1.20 */
+#define TOOL_VERSION_hscolour "1.20"
+#define MIN_TOOL_VERSION_hscolour(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  20 || \
+  (major1) == 1 && (major2) == 20 && (minor) <= 0)
 
 /* tool pkg-config-0.26 */
 #define TOOL_VERSION_pkg_config "0.26"
