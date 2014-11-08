@@ -1,10 +1,27 @@
+getHomeR :: Handler Html
+getHomeR = do
+    maid <- maybeAuthId
+    defaultLayout
+        [whamlet|
+            <p>Your current auth ID: #{show maid}
+            $maybe _ <- maid
+                <p>
+                    <a href=@{AuthR LogoutR}>Logout
+            $nothing
+                <p>
+                    <a href=@{AuthR LoginR}>Go to the login page
+        |]
+
 <br>
 <div class="row" id="cfcontent">
     <div class="col-md-2" id="left-nav">
+        mayTheUser <- maybeAuthId
         <div class="row" id="hello-section">
              <div class="col-md-11">
-                  <pre><h5>你好
-                  <p> <a href=@{AuthR LoginR}> 请登入
+             $maybe theUser <- mayTheUser   
+                  <pre><h5>你好, #{} 
+             <a href=@{AuthR LoginR}> 请登入
+
         <div class="row" id="functionalities">
             <div class="col-md-12">
                 <ul class="nav nav-pills nav-stacked">
@@ -16,6 +33,8 @@
                         <a href="##">我的预订历史
                     <li> 
                         <a href="##">个人信息设置
+
+
 
         <div class="row" id="separator">
             <div class="col-md-12">

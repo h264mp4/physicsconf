@@ -131,7 +131,7 @@ deleteDeleteUserR = do
 addUserForm :: Form User
 addUserForm = renderBootstrap3 simpleFormLayoutForAddUser $ User
         <$> areq emailField "电子邮箱" Nothing
-        <*> areq textField "密码" (Just "physics")
+        <*> pure "asd" --areq textField "密码" (Just "physics")
         <*> areq textField "姓名" Nothing
         <*> areq (selectFieldList authLevel) "权限" Nothing
         <*> lift (liftIO getCurrentTime)
@@ -139,7 +139,7 @@ addUserForm = renderBootstrap3 simpleFormLayoutForAddUser $ User
 editUserForm :: User -> Form User
 editUserForm userInfo = renderBootstrap3 simpleFormLayoutForAddUser $ User
         <$> pure (userEmail userInfo)
-        <*> areq textField "密码" (Just $ userPassword userInfo)
+        <*> pure (userPassword userInfo)
         <*> areq textField "姓名" (Just $ userName userInfo)
         <*> areq (selectFieldList authLevel) "权限" (Just $ userLevel userInfo)
         <*> pure (userFirstAdd userInfo)
