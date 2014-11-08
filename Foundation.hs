@@ -115,8 +115,10 @@ instance Yesod App where
     isAuthorized (AuthR _) _ = return Authorized
     isAuthorized FaviconR _ = return Authorized
     isAuthorized RobotsR _ = return Authorized
+    isAuthorized HomeR _ = return Authorized
+    isAuthorized DayBookingStatusR _ = return Authorized
     -- Default to Authorized for now.
-    isAuthorized _ _ = return Authorized -- return $ Unauthorized "请先登录"
+    isAuthorized _ _ = return $ Unauthorized "请先登录" -- return Authorized 
 
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
@@ -180,48 +182,32 @@ getExtra = fmap (appExtra . settings) getYesod
 
 ------------------------------------------------------------------------------------------
 ---- auth interface
+reloadR = PluginR "authConf" ["reload"]
+
 authConf :: AuthPlugin App
 authConf = AuthPlugin "authConf" dispatch login
     where
     dispatch "POST" ["login"] = do
         ename <- lift $ runInputPost $ ireq textField "邮箱"
         pw <- lift $ runInputPost $ ireq textField "密码"
-        liftIO $ print ename 
-        liftIO $ print pw
         mayName <- lift $ runDB $ verifyUserWithPassword ename pw
         case mayName of
-            Nothing -> lift $ loginErrorMessage (AuthR LoginR) "无效的用户名或密码"
+            Nothing -> lift $ redirect (AuthR reloadR)  
             Just theName -> do                                
                 lift $ setCredsRedirect $ Creds "email" ename [(ename, theName)]
-
+    dispatch "GET" ["reload"] = getReloadR >>= sendResponse
     dispatch _ _ = notFound
 
     url = PluginR "authConf" ["login"]
-    login authToMaster =
-        toWidget [hamlet|
-$newline never
-<div class="row">
-    <form class="form-horizontal control-label" method="post" action="@{authToMaster url}">
-        <div class="col-md-12" align="left">
-            <h4> 会议室预定系统登入: #
-        <div>
-            <br>
-        <div class="col-md-2" align="left">
-            <lable for="useremail">邮箱
-        <div class="col-md-10" align="left">
-            <input type="text" name="邮箱" id="useremail">
-        <div>
-            <br>
-        <div class="col-md-2" align="left">
-            <lable for="userpassword">密码
-        <div class="col-md-10" align="left">
-            <input type="password" name="密码" id="userpassword">
-        <div>
-            <br>
-        <div class="col-md-4" align="left">
-            <input class="btn btn-info" type="submit" value="登入">
-|]
+    login authToMaster = loginWidget authToMaster url
 
+getReloadR :: AuthHandler App Html
+getReloadR =  lift $ defaultLayout $ do
+    [whamlet|
+        <h4> 无效的用户名或密码
+        <p>请重新 
+            <a href=@{AuthR LoginR}>登入
+    |]
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
 -- other helpers, may not be used
@@ -240,5 +226,38 @@ getUserInfoByUniqueUserEmail theEmail = do
 verifyUserWithPassword theEmail thePassword = do
     mayInfo <- getUserInfoByUniqueUserEmail theEmail
     case mayInfo of
-        Nothing -> return Nothing
-        Just aUser -> return . Just . userName $ aUser
+        Nothing -> liftIO $ print "invalid username" >> return Nothing
+        Just aUser -> do
+            if userPassword aUser == thePassword
+               then return . Just . userName $ aUser
+               else do
+                    liftIO $ print $ "invalid password for " ++ (show $ userName aUser)
+                    return Nothing
+
+loginWidget authToMaster url = toWidget $ [hamlet|
+$newline never
+<div class="row">
+    <form class="form-horizontal control-label" method="post" action="@{authToMaster url}">
+        <div class="col-md-12" align="left">
+            <h4> 会议室预定系统登入: #
+        <div class="col-md-12" align="left">
+            <br>
+        <div class="col-md-12" align="left">
+            <br>
+        <div class="col-md-2" align="left">
+            <lable for="useremail">邮箱
+        <div class="col-md-10" align="left">
+            <input type="text" name="邮箱" id="useremail">
+        <div class="col-md-12" align="left">
+            <br>
+        <div class="col-md-2" align="left">
+            <lable for="userpassword">密码
+        <div class="col-md-10" align="left">
+            <input type="password" name="密码" id="userpassword">
+        <div class="col-md-12" align="left">
+            <br>
+        <div class="col-md-12" align="left">
+            <br>
+        <div class="col-md-4" align="left">
+            <input class="btn btn-info" type="submit" value="登入">
+|]

@@ -5,8 +5,10 @@
             <div class="col-md-12">
                 $maybe userInfo <- mayUserInfo
                     <div class="row" id="separator">
-                        <pre> <h4>你好, <b>#{userName userInfo}</b>
-                        <a href=@{AuthR LogoutR}> <h6 align="right"> 注销
+                        <pre> 
+                            <h4>你好, <b>#{userName userInfo}</b>
+                        <a href=@{AuthR LogoutR}> 
+                            <h6 align="left"> 注销
                     <div class="row">
                          <hr>                          
    
@@ -41,6 +43,8 @@
             <div class="col-md-8">
                     <img class="left-align-pic" src="/static/images/select-date.png">
                     <span class="bottom-align-text"> &nbsp按日期查询会议室预订情况
+        <div class="row"> 
+             <br>
         <div class="row">
             <div class="col-md-12">
                   <div id="myCalendarSelectDiv">
