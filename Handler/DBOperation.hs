@@ -15,7 +15,6 @@ import Import
 import Handler.Utils
 import Handler.MiscTypes
 
-
 -- | All basic operations are defined here and will called by Handler or Widget.
 
 ------------------------------------------------------------------------------------------
@@ -228,23 +227,3 @@ marshalOneRecordToTypeValues (Entity aRecordId aRecord) = do
     maybeRoom <- get (recordRoomId aRecord)
     return (aRecordId, aRecord, fromJust maybeUser, fromJust maybeRoom)
  
-------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------
--- other helpers, may not be used
-getUserIdByUniqueUserEmail theEmail = do
-    maybeUser <- getBy $ UniqueEmail theEmail
-    case maybeUser of
-        Nothing -> return Nothing
-        Just (Entity theId auser) -> return $ Just theId
-
-getUserInfoByUniqueUserEmail theEmail = do
-    maybeUser <- getBy $ UniqueEmail theEmail
-    case maybeUser of
-        Nothing -> return Nothing
-        Just (Entity _ aUser) -> return $ Just aUser
-
-verifyUserWithPassword theEmail thePassword = do
-    mayInfo <- getUserInfoByUniqueUserEmail theEmail
-    case mayInfo of
-        Nothing -> return Nothing
-        Just aUser -> return . Just . userName $ aUser

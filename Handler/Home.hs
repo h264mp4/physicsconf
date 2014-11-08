@@ -14,7 +14,7 @@ import Yesod.Auth
 
 -- This is a handler function for the GET request method on the HomeR
 -- resource pattern. All of your resource patterns are defined in
--- config/routes
+-- config/routesimport Handler.MiscTypes
 --
 -- The majority of the code you will write in Yesod lives in these handler
 -- functions. You can spread them across multiple files if you are so
@@ -47,6 +47,12 @@ getHomeR = do
         curTime = localTimeOfDay curDT
         curDayStr = show curDay
     -- liftIO $ print ("today in Day format: " ++ curDayStr ++ ". Time: " ++ (show curTime))
+    maid <- maybeAuthId
+    mayUserInfo <- do
+        case maid of 
+            Nothing -> return Nothing
+            Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail
+        
     defaultLayout $ do
         aDomId <- newIdent
         $(widgetFile "homepage")

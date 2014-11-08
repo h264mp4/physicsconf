@@ -24,7 +24,6 @@ import Data.Int
 import Data.Text(Text)
 import System.Locale
 import Handler.MiscTypes
-import Handler.AuthConf
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -156,7 +155,7 @@ instance YesodAuth App where
     authHttpManager _ = error "No manager needed"
     onLogin = return ()
     getAuthId = return . Just . credsIdent
-    maybeAuthId = lookupSession credsKey --"__ID"
+    maybeAuthId = lookupSession credsKey -- "__ID"
 
 -- achieve customized and internationalized form validation messages.
 instance RenderMessage App FormMessage where
@@ -178,3 +177,68 @@ getExtra = fmap (appExtra . settings) getYesod
 -- wiki:
 --
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
+
+------------------------------------------------------------------------------------------
+---- auth interface
+authConf :: AuthPlugin App
+authConf = AuthPlugin "authConf" dispatch login
+    where
+    dispatch "POST" ["login"] = do
+        ename <- lift $ runInputPost $ ireq textField "邮箱"
+        pw <- lift $ runInputPost $ ireq textField "密码"
+        liftIO $ print ename 
+        liftIO $ print pw
+        mayName <- lift $ runDB $ verifyUserWithPassword ename pw
+        case mayName of
+            Nothing -> lift $ loginErrorMessage (AuthR LoginR) "无效的用户名或密码"
+            Just theName -> do                                
+                lift $ setCredsRedirect $ Creds "email" ename [(ename, theName)]
+
+    dispatch _ _ = notFound
+
+    url = PluginR "authConf" ["login"]
+    login authToMaster =
+        toWidget [hamlet|
+$newline never
+<div class="row">
+    <form class="form-horizontal control-label" method="post" action="@{authToMaster url}">
+        <div class="col-md-12" align="left">
+            <h4> 会议室预定系统登入: #
+        <div>
+            <br>
+        <div class="col-md-2" align="left">
+            <lable for="useremail">邮箱
+        <div class="col-md-10" align="left">
+            <input type="text" name="邮箱" id="useremail">
+        <div>
+            <br>
+        <div class="col-md-2" align="left">
+            <lable for="userpassword">密码
+        <div class="col-md-10" align="left">
+            <input type="password" name="密码" id="userpassword">
+        <div>
+            <br>
+        <div class="col-md-4" align="left">
+            <input class="btn btn-info" type="submit" value="登入">
+|]
+
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+-- other helpers, may not be used
+getUserIdByUniqueUserEmail theEmail = do
+    maybeUser <- getBy $ UniqueEmail theEmail
+    case maybeUser of
+        Nothing -> return Nothing
+        Just (Entity theId auser) -> return $ Just theId
+
+getUserInfoByUniqueUserEmail theEmail = do
+    maybeUser <- getBy $ UniqueEmail theEmail
+    case maybeUser of
+        Nothing -> return Nothing
+        Just (Entity _ aUser) -> return $ Just aUser
+
+verifyUserWithPassword theEmail thePassword = do
+    mayInfo <- getUserInfoByUniqueUserEmail theEmail
+    case mayInfo of
+        Nothing -> return Nothing
+        Just aUser -> return . Just . userName $ aUser

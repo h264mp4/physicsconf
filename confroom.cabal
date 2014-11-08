@@ -27,7 +27,6 @@ library
                      Handler.Room
                      Handler.User
                      Handler.Manage
-                     Handler.AuthConf
                      CommonWidget
 
     if flag(dev) || flag(library-only)
