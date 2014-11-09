@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    console.log("we start . . .");
+    //console.log("we start . . .");
 
     // 1. some constant and helper functions
     var infotype = "#{rawJS dataType}";
@@ -8,7 +8,7 @@ $(document).ready(function() {
 
     function editDeleteFunc(value) {
         var editItemId = "edit" + infotype + value;
-        console.log("real id is " + editItemId);
+        //console.log("real id is " + editItemId);
         var deleteItemId = "delete" + infotype + value;
         editButtons.push([editItemId, value]); 
         deleteButtons.push([deleteItemId, value]); 
@@ -35,7 +35,7 @@ $(document).ready(function() {
     titleColumns["typeuser"].push({field: "sqlkey", title: " ", formatter: editDeleteFunc, align:"center"});
 
     function setupListTable() {
-        console.log("start setup dataTable.");
+        //console.log("start setup dataTable.");
 
         $("##{rawJS aRandomId}").bootstrapTable({
             striped: true,
@@ -53,7 +53,7 @@ $(document).ready(function() {
             queryParams: function (params) {
                 params[infotype] = infotype; 
                 params["limit"] = 200;
-                console.log(params);
+                //console.log(params);
                 return params;
             },
 
@@ -88,7 +88,7 @@ $(document).ready(function() {
                 for (i=0; i < deleteButtons.length; i++) {
                     var key = deleteButtons[i][0];
                     var val = deleteButtons[i][1];
-                    console.log("DeleteButton" + i + ". Key" + key + ", value" + val);
+                    //console.log("DeleteButton" + i + ". Key" + key + ", value" + val);
          
                     $("#"+key).attr({"btnid":key, "dbid":val});
                     $("#"+key).click(function (){                        
@@ -115,7 +115,7 @@ $(document).ready(function() {
 
         });
 
-        console.log("finish setup dataTable.");
+        //console.log("finish setup dataTable.");
     };
 
     function destroyDataTable() {
@@ -126,7 +126,7 @@ $(document).ready(function() {
     // we setup the initial dataTable
     setupListTable();
 
-    console.log("edit" + editButtons);
-    console.log("delete" + deleteButtons);
+    //console.log("edit" + editButtons);
+    //console.log("delete" + deleteButtons);
 
 });

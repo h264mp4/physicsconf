@@ -13,15 +13,14 @@ $(document).ready(function() {
 
     // year-month-day, on server side, we call fromGregorian y m d to recreate the Day.
     var queryDate = getDateStr(new Date()); 
-    console.log(queryDate);
-
+    //console.log(queryDate);
 
     function showCurrentQueryDate(qd){        
         $("#myShowDate").html("预订情况: [<span style='color:#E8A02B'> <b><i>" + qd + "</i></b> </span>]");
     }
 
     function setupDataTable(queryDay) {
-        console.log("start setup dataTable.");
+        //console.log("start setup dataTable.");
 
         var titleColumns = [];
         titleColumns.push({field: "房间 / 时间", title: "房间 / 时间"})
@@ -48,7 +47,7 @@ $(document).ready(function() {
             contentType: "application/json",           
             queryParams: function (params) {
                 params["queryDay"] = queryDay;
-                console.log(params);
+                //console.log(params);
                 return params;
             },
 
@@ -71,7 +70,7 @@ $(document).ready(function() {
 
         // calculate the cells need merge.
 
-        console.log("finish setup dataTable.");
+        //console.log("finish setup dataTable.");
     }
 
     function destroyDataTable() {
@@ -82,7 +81,7 @@ $(document).ready(function() {
     /*kalendae doesn't depend on jquery, but still put it here. */     
     window.moment = Kalendae.moment;
     var utilDate = moment("#{rawJS curDayStr}", "YYYY-MM-DD").add(2, 'months');
-    console.log("utildate:" + utilDate);
+    //console.log("utildate:" + utilDate);
 
     $("#myCalendarSelectDiv").kalendae({
         userYearNav: false,
@@ -96,9 +95,8 @@ $(document).ready(function() {
 
         subscribe: {
             'date-clicked': function (date, action) {
-                console.log("new selected date: " + date["_i"]);
+                //console.log("new selected date: " + date["_i"]);
                 queryDate = date["_i"];
-                console.log("the query date is: " + queryDate);
 
                 // 1. destroy the existing data table.
                 destroyDataTable();
@@ -112,7 +110,7 @@ $(document).ready(function() {
         }
     });
 
-    console.log("finish kalendae");
+    //console.log("finish kalendae");
       
     // we setup the initial dataTable
     setupDataTable(queryDate);
