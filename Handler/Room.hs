@@ -44,7 +44,7 @@ postAddRoomR = do
             mayRoomId <- runDB $ addNewRoom formInfo
             case mayRoomId of
                  Nothing -> defaultLayout $ do
-                          backNavWidget emptyText ("会议室信息已存在，请重新输入" :: Text) ManageRoomR
+                   backNavWidget emptyText ("会议室信息已存在，请重新输入" :: Text) ManageRoomR
                  Just roomId -> do
                      liftIO $ print ("Add new room done: " ++ show (fromJust mayRoomId))
                      liftIO $ print formInfo
@@ -123,7 +123,6 @@ deleteDeleteRoomR = do
 
 ------------------------------------------------------------------------------------------
 ---- other helpers
-
 simpleFormLayoutForAddRoom = BootstrapHorizontalForm
                              {
                                   bflLabelOffset = ColMd 0
@@ -140,7 +139,6 @@ toHtmlRoomInfo roomInfo = (
     "会议室有效期至: " <> (Data.Text.pack $ show $ roomValidTime roomInfo) <> "<br />  " <>
     "会议室添加日期: " <> (Data.Text.pack $ show $ convertUtcToZoneTime $ roomFirstAdd roomInfo) <> 
     "<br />")
-
 
 addRoomForm :: Form Room
 addRoomForm = renderBootstrap3 simpleFormLayoutForAddRoom $ Room

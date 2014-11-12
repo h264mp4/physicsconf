@@ -112,10 +112,17 @@ $(document).ready(function() {
 
     //console.log("finish kalendae");
       
+    // other callbacks
+    // 1. post button for booking
+    $("##{rawJS postId}").click(function (){ 
+         
+         window.location.href = "@{editLink}/?editId"+"="+v;
+    });
+
+
+
     // we setup the initial dataTable
     setupDataTable(queryDate);
     showCurrentQueryDate(queryDate);
-
-
-    // other callbacks
+    //changeBookingDate(queryDate);
 });

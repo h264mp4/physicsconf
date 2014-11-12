@@ -6,7 +6,7 @@
 
 / HomeR GET POST
 /daybookingstatus DayBookingStatusR GET
--- /dobooking DoBookingR GET POST
+/dobooking DoBookingR GET POST
 
 /addroom AddRoomR GET POST
 /listroom ListRoomR GET

@@ -21,7 +21,6 @@ import qualified Data.Conduit.Text as CT
 import qualified Data.Conduit.List as CL
 import Data.Aeson(ToJSON(..), object, (.=), decode)
 
-
 getAddUserR :: Handler Html
 getAddUserR = do
     (addUserWidget, formEnctype) <- generateFormPost addUserForm
@@ -125,7 +124,7 @@ deleteDeleteUserR = do
         return ()
 
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 ---- other helpers
 
 addUserForm :: Form User

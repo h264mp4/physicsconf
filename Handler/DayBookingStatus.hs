@@ -36,13 +36,12 @@ fakeDataRows = map (\ x -> object $ zipWith (\ k v -> (k, toJSON v)) fields x) c
 
 fakeJsonRet = object $ [fakeDataName .= fakeDataRows, "total" .= toJSON (4::Int)]
 
+
+-- we will add 'yuding' for non-exist fields with hyperlinks on those 'yuding'
+
 getDayBookingStatusR :: Handler Value -- actually return a json.
 getDayBookingStatusR = do
-    --req <- waiRequest
-    --req' <- getRequest
-    --liftIO $ print req
-    --liftIO $ print $ reqLangs req'
-    valueMB <- lookupGetParam "queryDay"
+    maybeValue <- lookupGetParam "queryDay"
     case valueMB of
         Nothing -> liftIO $ print "not passed"
         Just x  -> liftIO $ print x

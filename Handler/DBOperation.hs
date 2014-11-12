@@ -8,8 +8,6 @@ import Database.Persist.Types
 
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
-import qualified Data.ByteString as BS
-import qualified Data.Map as M
 
 import Import
 import Handler.Utils
@@ -27,8 +25,6 @@ data InfoKey = InfoUser | InfoRoom | InfoRecord
 
 ------------------------------------------------------------------------------------------
 -- | User Operaions: addNewUser editUserProfile deleteUser
-
--- addNewUser : return Maybe (Key User)
 addNewUser newUser = do
     --runMigration migrateAll
     userExist <- selectList [UserEmail ==. (userEmail newUser)] [LimitTo 1]
@@ -95,7 +91,7 @@ bookingRoom theUserId theRoomId theDay timespan = do
         Just (Entity theId theValue) -> return theId
         Nothing -> do
             curTime <- liftIO $ getCurrentTime
-            let newRecord = Record theUserId theRoomId theDay timespan curTime False          
+            let newRecord = Record theUserId theRoomId theDay timespan curTime False
             newRecordId <- insert newRecord
             maybeUser <- get theUserId
             maybeRoom <- get theRoomId
