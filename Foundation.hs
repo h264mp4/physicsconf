@@ -189,13 +189,13 @@ authConf :: AuthPlugin App
 authConf = AuthPlugin "authConf" dispatch login
     where
     dispatch "POST" ["login"] = do
-        ename <- lift $ runInputPost $ ireq textField "邮箱"
+        emailName <- lift $ runInputPost $ ireq textField "邮箱"
         pw <- lift $ runInputPost $ ireq textField "密码"
-        mayName <- lift $ runDB $ verifyUserWithPassword ename pw
+        mayName <- lift $ runDB $ verifyUserWithPassword emailName pw
         case mayName of
             Nothing -> lift $ redirect (AuthR reloadR)  
             Just theName -> do                                
-                lift $ setCredsRedirect $ Creds "email" ename [(ename, theName)]
+                lift $ setCredsRedirect $ Creds "email" emailName [(emailName, theName)]
     dispatch "GET" ["reload"] = getReloadR >>= sendResponse
     dispatch _ _ = notFound
 

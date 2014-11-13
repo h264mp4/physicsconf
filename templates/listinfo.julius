@@ -80,7 +80,7 @@ $(document).ready(function() {
                     // use the closure to boost the var scope (using bv)
                     (function(k, v){ 
                         $("#"+k).click(function (){ 
-                            window.location.href = "@{editLink}/?editId"+"="+v;
+                            window.location.href = "@{editLink}/?editId="+v;
                         });
                     })(key, val);
                 }

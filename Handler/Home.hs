@@ -14,7 +14,7 @@ import Text.Julius(rawJS)
    
 getHomeR :: Handler Html
 getHomeR = do
-    -- curDay will be passed to Juliu, 
+    -- curDay will be passed to Julius, 
     -- to limit the day selection range to 2 month.
     curDT <- liftIO getCurDayAndTime
     let curDay = localDay curDT
@@ -27,9 +27,5 @@ getHomeR = do
             Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail
         
     defaultLayout $ do
-        postId <- newIdent
+        newbookingId <- newIdent
         $(widgetFile "homepage")
-
-
-postHomeR :: Hander Html
-postHomeR = do

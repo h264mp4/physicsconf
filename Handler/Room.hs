@@ -59,7 +59,6 @@ postAddRoomR = do
 
 getListRoomR :: Handler Value
 getListRoomR = do
-    -- TODO: User Auth Widget
     rooms <- runDB $ listRoomProfile
     if null rooms
        then return $ object $ []
@@ -116,7 +115,7 @@ deleteDeleteRoomR = do
        else return $ object $ [("ret" :: Text) .= ("invalid data" :: Text)]
 
     where 
-    doDelete deleteObj = do
+    doDelete deleteObj = donewbookingId
         let theId = toSqlKey . read . unpack . deleteId $ deleteObj
         runDB $ deleteRoom (theId :: Key Room)
         return ()

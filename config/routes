@@ -4,9 +4,9 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/ HomeR GET POST
+/ HomeR GET
 /daybookingstatus DayBookingStatusR GET
-/dobooking DoBookingR GET POST
+/booking BookingR GET POST
 
 /addroom AddRoomR GET POST
 /listroom ListRoomR GET

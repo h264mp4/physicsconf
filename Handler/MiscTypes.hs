@@ -17,6 +17,8 @@ data Timespan = Timespan TimeOfDay TimeOfDay
     deriving (Show, Read, Eq, Ord)
 derivePersistField "Timespan"
 
+
+-- for jason serialize, using Generic
 data DeleteId = DeleteId {deleteId :: Text}
     deriving (Show, Generic) 
 

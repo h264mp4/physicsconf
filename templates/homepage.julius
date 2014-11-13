@@ -114,15 +114,14 @@ $(document).ready(function() {
       
     // other callbacks
     // 1. post button for booking
-    $("##{rawJS postId}").click(function (){ 
-         
-         window.location.href = "@{editLink}/?editId"+"="+v;
+    $("##{rawJS newbookingId}").click(function (){                            
+         window.location.href = "@{dobooking}/?day="+queryDate+"&roomid=nil";
     });
 
-
-
+    /////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////
+    //// Here we start execute.
     // we setup the initial dataTable
     setupDataTable(queryDate);
     showCurrentQueryDate(queryDate);
-    //changeBookingDate(queryDate);
 });
