@@ -51,17 +51,8 @@ postAddUserR = do
                      defaultLayout $ do
                        backNavWidget ("用户信息已保存"::Text) (toHtmlUserInfo formInfo) ManageUserR
 
-simpleFormLayoutForAddUser = BootstrapHorizontalForm
-                             {
-                                  bflLabelOffset = ColMd 0
-                                 ,bflLabelSize   = ColMd 4
-                                 ,bflInputOffset = ColMd 0
-                                 ,bflInputSize   = ColMd 4
-                             }
-
 getListUserR :: Handler Value
 getListUserR = do
-    -- TODO: User Auth Widget
     users <- runDB $ listUserProfile
     if null users
        then return $ object $ []
@@ -128,7 +119,7 @@ deleteDeleteUserR = do
 ---- other helpers
 
 addUserForm :: Form User
-addUserForm = renderBootstrap3 simpleFormLayoutForAddUser $ User
+addUserForm = renderBootstrap3 commonSimpleFormLayout $ User
         <$> areq emailField "电子邮箱" Nothing
         <*> pure "asd" --areq textField "密码" (Just "physics")
         <*> areq textField "姓名" Nothing
@@ -136,7 +127,7 @@ addUserForm = renderBootstrap3 simpleFormLayoutForAddUser $ User
         <*> lift (liftIO getCurrentTime)
 
 editUserForm :: User -> Form User
-editUserForm userInfo = renderBootstrap3 simpleFormLayoutForAddUser $ User
+editUserForm userInfo = renderBootstrap3 commonSimpleFormLayout $ User
         <$> pure (userEmail userInfo)
         <*> pure (userPassword userInfo)
         <*> areq textField "姓名" (Just $ userName userInfo)

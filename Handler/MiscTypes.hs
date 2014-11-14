@@ -25,5 +25,13 @@ data DeleteId = DeleteId {deleteId :: Text}
 data EditId = EditId {editId :: Text}
     deriving (Show, Generic) 
 
+data SelectRoom = SelectRoom {selectRoom :: Text}
+    deriving (Show, Generic) 
+
+data SelectDay = SelectDay {selectDay :: Text}
+    deriving (Show, Generic) 
+
 instance FromJSON DeleteId
 instance FromJSON EditId
+instance FromJSON SelectRoom
+instance FromJSON SelectDay

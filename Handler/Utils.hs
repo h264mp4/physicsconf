@@ -1,6 +1,9 @@
 {-# LANGUAGE TupleSections, OverloadedStrings, RankNTypes, BangPatterns #-}
 module Handler.Utils where
 
+import Yesod.Form.Jquery
+import Yesod.Form.Bootstrap3 
+
 import Prelude
 import Data.Time
 import Data.String(IsString)
@@ -33,3 +36,12 @@ emptyString = []
 
 emptyText :: Text
 emptyText = ""
+
+
+commonSimpleFormLayout = BootstrapHorizontalForm
+                         {
+                              bflLabelOffset = ColMd 0
+                             ,bflLabelSize   = ColMd 4
+                             ,bflInputOffset = ColMd 0
+                             ,bflInputSize   = ColMd 4
+                         }

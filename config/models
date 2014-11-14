@@ -18,12 +18,13 @@ Room
 
 Record
     userId UserId
-    roomId RoomId
     day Day
-    timespan Timespan
+    roomId RoomId
+    startTime TimeOfDay
+    endTime TimeOfDay
     bookingTime UTCTime
     cancel Bool
-    UniqueRecord userId roomId day timespan
+    UniqueRecord day roomId startTime endTime
     deriving Show
 
 DayRecords

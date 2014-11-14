@@ -49,9 +49,7 @@ listUserProfile = do
     users <- selectList [] [Asc UserEmail]
     return (users :: [Entity User])   
 
-deleteUser theUserId = do
-    delete theUserId
-    return ()
+deleteUser = delete
 
 ------------------------------------------------------------------------------------------
 -- | Room operations: addNewRoom, editRoomProfile, deleteRoom
@@ -84,14 +82,14 @@ deleteRoom = delete -- theRoomId
 -- | Booking management: bookingRoom,  deleteABooking
 
 -- | TODO: we should check timespan overlapping
-bookingRoom theUserId theRoomId theDay timespan = do
+bookingRoom theUserId theRoomId theDay startTime endTime = do
     -- check whether the record exist
     maybeExist <- getBy $ UniqueRecord theUserId theRoomId theDay timespan
     case maybeExist of 
         Just (Entity theId theValue) -> return theId
         Nothing -> do
             curTime <- liftIO $ getCurrentTime
-            let newRecord = Record theUserId theRoomId theDay timespan curTime False
+            let newRecord = Record theUserId theRoomId theDay startTime endTime curTime False
             newRecordId <- insert newRecord
             maybeUser <- get theUserId
             maybeRoom <- get theRoomId
@@ -217,7 +215,7 @@ getUserBookingInfosByUserEmail theEmail bHistory = do
     where
     getRecordIdsFromDayRecordsEntity (Entity _ aDayRecords) = dayRecordsIds aDayRecords
 
- 
+---- TODO: refactor this function
 marshalOneRecordToTypeValues (Entity aRecordId aRecord) = do
     maybeUser <- get (recordUserId aRecord)
     maybeRoom <- get (recordRoomId aRecord)

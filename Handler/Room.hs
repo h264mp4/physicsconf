@@ -122,14 +122,6 @@ deleteDeleteRoomR = do
 
 ------------------------------------------------------------------------------------------
 ---- other helpers
-simpleFormLayoutForAddRoom = BootstrapHorizontalForm
-                             {
-                                  bflLabelOffset = ColMd 0
-                                 ,bflLabelSize   = ColMd 4
-                                 ,bflInputOffset = ColMd 0
-                                 ,bflInputSize   = ColMd 4
-                             }
-
 toHtmlRoomInfo :: Room -> Text
 toHtmlRoomInfo roomInfo = (
     "会议室编号: " <> (roomNumber roomInfo) <> "<br />  " <>
@@ -140,7 +132,7 @@ toHtmlRoomInfo roomInfo = (
     "<br />")
 
 addRoomForm :: Form Room
-addRoomForm = renderBootstrap3 simpleFormLayoutForAddRoom $ Room
+addRoomForm = renderBootstrap3 commonSimpleFormLayout $ Room
         <$> areq textField "会议室编号" Nothing
         <*> areq (selectFieldList authLevel) "预订权限" Nothing
         <*> areq boolField "是否现在启用" (Just True)

@@ -115,7 +115,7 @@ $(document).ready(function() {
     // other callbacks
     // 1. post button for booking
     $("##{rawJS newbookingId}").click(function (){                            
-         window.location.href = "@{dobooking}/?day="+queryDate+"&roomid=nil";
+         window.location.href = "@{dobooking}/?selectDay="+queryDate+"&selectRoom=null";
     });
 
     /////////////////////////////////////////////////////////////////////////////////
