@@ -42,7 +42,7 @@ fakeJsonRet = object $ [fakeDataName .= fakeDataRows, "total" .= toJSON (4::Int)
 getDayBookingStatusR :: Handler Value -- actually return a json.
 getDayBookingStatusR = do
     maybeValue <- lookupGetParam "queryDay"
-    case valueMB of
+    case maybeValue of
         Nothing -> liftIO $ print "not passed"
         Just x  -> liftIO $ print x
     return $ fakeJsonRet

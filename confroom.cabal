@@ -19,6 +19,7 @@ library
                      Settings                    
                      Settings.StaticFiles
                      Settings.Development
+                     CommonWidget
                      Handler.DBOperation
                      Handler.Home
                      Handler.Utils
@@ -27,7 +28,7 @@ library
                      Handler.Room
                      Handler.User
                      Handler.Manage
-                     CommonWidget
+                     Handler.Booking
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

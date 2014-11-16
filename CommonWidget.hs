@@ -2,8 +2,6 @@
 module CommonWidget where
 
 import Import
-import Handler.DBOperation
-import Handler.MiscTypes
 import Handler.Utils
 import Data.Maybe(fromJust)
 import Data.Aeson(ToJSON(..), object, (.=))
@@ -12,12 +10,12 @@ import Yesod.Form.Bootstrap3
 import Text.Julius(rawJS)
 
 backNavWidget :: Text -> Text -> (Route App) -> Widget
-backNavWidget title info theLink = toWidget [hamlet|
+backNavWidget slogen info theLink = toWidget [hamlet|
     <div class="row">
         <div class="col-md-12">
             <input type=button value="返回" class="btn btn-primary" onClick="location.href='@{theLink}'">
         <div class="col-md-12">
-            <h3> #{title}
+            <h3> #{slogen}
         <div class="col-md-12"> 
             <p> #{preEscapedToMarkup info}                     
 |]

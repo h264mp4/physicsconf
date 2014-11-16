@@ -2,10 +2,6 @@ h1 {
     text-align: center;
 }
 
-h2##{aDomId} {
-    color: #990;
-}
-
 #left-nav {
     border-right: 2px solid #E8E8E8;
 }

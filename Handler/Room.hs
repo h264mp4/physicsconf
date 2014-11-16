@@ -115,7 +115,7 @@ deleteDeleteRoomR = do
        else return $ object $ [("ret" :: Text) .= ("invalid data" :: Text)]
 
     where 
-    doDelete deleteObj = donewbookingId
+    doDelete deleteObj = do
         let theId = toSqlKey . read . unpack . deleteId $ deleteObj
         runDB $ deleteRoom (theId :: Key Room)
         return ()
@@ -141,7 +141,7 @@ addRoomForm = renderBootstrap3 commonSimpleFormLayout $ Room
         <*> lift (liftIO $ getCurrentTime)
 
 editRoomForm :: Maybe Room -> Form Room
-editRoomForm roomInfo = renderBootstrap3 simpleFormLayoutForAddRoom $ Room
+editRoomForm roomInfo = renderBootstrap3 commonSimpleFormLayout $ Room
         <$> pure (fromJust $ roomNumber <$> roomInfo)
         <*> areq (selectFieldList authLevel) "预订权限" (roomLevel <$> roomInfo)
         <*> areq boolField "是否现在启用" (roomAvailable <$> roomInfo)

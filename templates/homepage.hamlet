@@ -60,4 +60,3 @@
 
             <div class="col-md-12" align="left">
                 <input type=button value="新的预订" class="btn btn-primary" id=#{newbookingId}>
-                                

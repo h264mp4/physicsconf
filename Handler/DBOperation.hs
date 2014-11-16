@@ -82,14 +82,16 @@ deleteRoom = delete -- theRoomId
 -- | Booking management: bookingRoom,  deleteABooking
 
 -- | TODO: we should check timespan overlapping
-bookingRoom theUserId theRoomId theDay startTime endTime = do
+bookingRoom newRecord@(Record theUserId theDay theRoomId startTime endTime curTime _) = do
     -- check whether the record exist
-    maybeExist <- getBy $ UniqueRecord theUserId theRoomId theDay timespan
+    maybeExist <- getBy $ UniqueRecord theDay theRoomId startTime endTime
     case maybeExist of 
-        Just (Entity theId theValue) -> return theId
+        Just (Entity theId theValue) -> do
+            liftIO $ print $ "It has already been booked" ++ (show theId)
+            return Nothing
         Nothing -> do
-            curTime <- liftIO $ getCurrentTime
-            let newRecord = Record theUserId theRoomId theDay startTime endTime curTime False
+            --curTime <- liftIO $ getCurrentTime
+            --let newRecord = Record theUserId theRoomId theDay startTime endTime curTime False
             newRecordId <- insert newRecord
             maybeUser <- get theUserId
             maybeRoom <- get theRoomId
@@ -103,12 +105,12 @@ bookingRoom theUserId theRoomId theDay startTime endTime = do
             case maybeDay of
                 Nothing -> do
                     newId <- insert $ DayRecords [newRecordId] theDay
-                    return newRecordId
+                    return $ Just newRecordId
                 Just (Entity existId records) -> do
                     let existRecords = dayRecordsIds records
                         updateRecords = existRecords ++ [newRecordId]
                     update existId [DayRecordsIds =. updateRecords]
-                    return newRecordId
+                    return $ Just newRecordId
 
 cancelABooking recordId = do
     maybeRecord <- get recordId
@@ -137,10 +139,10 @@ emailNotification aRecord aUser aRoom status = do
         nameText   = userName  aUser
         roomText   = roomNumber aRoom
         theDay     = recordDay aRecord
-        timespan   = recordTimespan aRecord
+        startTime  = recordStartTime aRecord
+        endTime    = recordEndTime aRecord
         statusText = getStatusText status
         (year, month, day)   = toGregorian theDay
-        (startTime, endTime) = timeSpanToTimeString timespan
 
     -- create the email
     let fromAddress = Address (Just $ T.pack "Conference Room Admin") 
@@ -149,7 +151,8 @@ emailNotification aRecord aUser aRoom status = do
         ccAddress   = []
         bccAddress  = []
         subject     = T.pack (statusText !! 0 ++ ": " ++ "Conference Room " ++ 
-                              T.unpack roomText ++ " [from " ++ startTime ++ " to " ++ endTime ++ 
+                              T.unpack roomText ++ " [from " ++ (show startTime) ++ " to " 
+                              ++ (show endTime) ++ 
                               ", " ++ show year ++ "-" ++ show month ++ "-" ++ show day ++ "]")
         allParts    = plainTextPart (TL.pack "This is a test")
         theMail     = simpleMail fromAddress toAddress ccAddress bccAddress subject [allParts]

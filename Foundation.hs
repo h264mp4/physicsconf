@@ -259,6 +259,9 @@ $newline never
             <br>
         <div class="col-md-12" align="left">
             <br>
-        <div class="col-md-4" align="left">
+        <div class="col-md-1" align="left" >
             <input class="btn btn-info" type="submit" value="登入">
+        <div class="col-md-1" align="left">
+            <input class="btn btn-primary" type="button" value="返回" onclick="window.location.href='@{HomeR}'">
+
 |]
