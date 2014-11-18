@@ -24,7 +24,7 @@ $(document).ready(function() {
 
         var titleColumns = [];
         titleColumns.push({field: "房间 / 时间", title: "房间 / 时间"})
-        for (i = 8; i < 23; i++) {
+        for (i = 7; i < 24; i++) {
             titleColumns.push({
                 field: i,
                 title: "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + i.toString() + "点",

@@ -14,12 +14,12 @@ h1 {
 }
 
 .bottom-align-text {
-    font-size: 14pt;
+    font-size: 1.2em;
     font-family: 宋体; 
 }
 
 .bottom-align-text > span {
-    font-size: 16pt;
+    font-size: 1.2em;
 }
 
 .fixed-width {
@@ -27,9 +27,9 @@ h1 {
 }
 
 #functionalities > ul > li {
-    font-size: 13pt;
+    font-size: 1.2em;
 }
 
 #intros > ul > li {
-    font-size: 13pt;
+    font-size: 1.2em;
 }

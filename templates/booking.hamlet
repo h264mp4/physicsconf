@@ -1,10 +1,12 @@
-<div class="col-md-8">
-     <input class="btn btn-info" type="button" value="返回" onclick="window.location.href='@{HomeR}'" >
+<div class="row">
+    <div class="col-md-4 right-with-border" >
+        <input class="btn btn-info" type="button" value="返回" onclick="window.location.href='@{HomeR}'">       
+        <br>
+        <br>
+        <form class="form-horizontal control-label" method=post action=@{BookingR} enctype=#{formEnctype}>
+            ^{newbookingWidget}
+            <br>
+            <input class="btn btn-primary" type="submit" value="预定">
 
-<div class="col-md-8" id=#{newBookingFormId}>
-  <form class="form-horizontal control-label" method=post action=@{BookingR} enctype=#{formEnctype}>
-     ^{newbookingWidget}
-     <input class="btn btn-primary" type="submit" value="预定">
-
-
-
+    <div class="col-md-8" id=#{aNewTable}>
+        

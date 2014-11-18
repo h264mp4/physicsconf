@@ -40,6 +40,7 @@ getBookingR = do
                    generateFormPost (newbookingForm theUserId theDay theRoom availableRoomPairs)
           defaultLayout $ do
               newBookingFormId <- newIdent
+              aNewTable <- newIdent
               $(widgetFile "booking")
 
 postBookingR :: Handler Html
@@ -104,7 +105,6 @@ getPreferRoom mayRoomId availableRoomPairs =
 
 ------------------------------------------------------------------------------------------
 ---- other helpers
-
 daySetting      = FieldSettings ("预定日期") Nothing (Just "daySid") Nothing []
 roomSetting     = FieldSettings ("会议室") Nothing (Just "roomSid") Nothing []
 startDaySetting = FieldSettings ("开始时间") Nothing (Just "startDaySid") Nothing []
@@ -117,13 +117,14 @@ newbookingForm theUserId theDay theRoom roomPairs = renderBootstrap3 commonSimpl
         <$> pure theUserId
         <*> areq (jqueryDayField  def{jdsChangeMonth = True}) daySetting theDay 
         <*> areq (selectFieldList roomPairs) roomSetting theRoom
-        <*> areq (selectFieldList hourPairs) startDaySetting Nothing
-        <*> areq (selectFieldList hourPairs) endDaySetting Nothing
+        <*> areq (selectFieldList hourStartPairs) startDaySetting Nothing
+        <*> areq (selectFieldList hourEndPairs) endDaySetting Nothing
         <*> lift (liftIO $ getCurrentTime)
         <*> pure False
     where       
-    hourPairs :: [(Text, TimeOfDay)]
-    hourPairs = zipWith toHourPair [7..24] [7..24]
+    hourStartPairs, hourEndPairs :: [(Text, TimeOfDay)]
+    hourStartPairs = zipWith toHourPair [7..23] [7..23]
+    hourEndPairs   = zipWith toHourPair [8..24] [8..24]
     toHourPair a b = (T.pack $ show a, TimeOfDay b 0 0)
 
 toHtmlBookingInfo :: Record -> Text -> Text

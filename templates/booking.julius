@@ -1,0 +1,75 @@
+//daySetting      = FieldSettings ("预定日期") Nothing (Just "daySid") Nothing []
+//roomSetting     = FieldSettings ("会议室") Nothing (Just "roomSid") Nothing []
+//startDaySetting = FieldSettings ("开始时间") Nothing (Just "startDaySid") Nothing []
+//endDaySetting   = FieldSettings ("结束时间") Nothing (Just "endDaySid") Nothing []
+
+$(document).ready(function() {
+
+    var dp = document.getElementById("daySid");
+    console.log(dp);
+    console.log(dp.type);
+    $(dp).replaceWith('<input type="text">');
+    $(dp).datepicker();
+
+    function showCurrentQueryDate(qd){        
+        $("#myShowDate").html("预订情况: [<span style='color:#E8A02B'> <b><i>" + qd + "</i></b> </span>]");
+    }
+
+    function setupDataTable(queryDay) {
+
+        var titleColumns = [];
+        titleColumns.push({field: "房间 / 时间", title: "房间 / 时间"})
+        for (i = 7; i <= 24; i++) {
+            titleColumns.push({
+                field: i,
+                title: "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + i.toString() + "点",
+                width: "200px"
+            });
+        }
+
+        $("##{rawJS aNewTable}").bootstrapTable({
+            striped: true,
+            pagination: true,
+            showToggle: true,
+            showColumns: true,
+            cache: false,           
+
+            pageList: [5,8,10],
+
+            // below is the ajax query and response process.
+            url: "@{DayBookingStatusR}",
+            method: "GET",
+            contentType: "application/json",           
+            queryParams: function (params) {
+                params["queryDay"] = queryDay;
+                //console.log(params);
+                return params;
+            },
+
+            responseHandler: function(retData){
+                return retData.dataRows;
+            },
+
+            rowStyle: function (row, index) {
+                var classes = ['success', 'info', 'active', 'warning', 'danger'];
+                if (index % 2 === 0 && index / 2 < classes.length) {
+                    return {
+                        classes: classes[index / 2],
+                    };
+                }
+                return {};
+            },
+
+            columns: titleColumns
+        });
+
+        // calculate the cells need merge.
+        //console.log("finish setup dataTable.");
+    }
+
+    function destroyDataTable() {
+        $("##{rawJS aNewTable}").bootstrapTable("destroy");
+        //this line is crutial for recreate the table.
+        $("##{rawJS aNewTable}").empty(); 
+    }
+});
