@@ -7,5 +7,6 @@
             ^{newbookingWidget}
             <br>
             <input class="btn btn-primary" type="submit" value="预定">
-    <div class="col-md-8" id=#{aNewTable}>
-        
+    <div class="col-md-8">
+        <div class="row">
+            <div class=col-md-12 id=#{aNewTable}>

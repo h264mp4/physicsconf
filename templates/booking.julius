@@ -4,28 +4,61 @@
 //endDaySetting   = FieldSettings ("结束时间") Nothing (Just "endDaySid") Nothing []
 
 $(document).ready(function() {
+    /// 1. do all init.    
+    var dayId   = document.getElementById("daySid");
+    var roomId  = document.getElementById("roomSid");
+    var startId = document.getElementById("startDaySid");
+    var endId   = document.getElementById("endDaySid");
 
-    var dp = document.getElementById("daySid");
-    console.log(dp);
-    console.log(dp.type);
+    //console.log(dayId);
+    //console.log(roomId);
+    //console.log(startId);
+    //console.log(endId);
+    //console.log("#{rawJS curDateStr}");
+
+    var bookingDay = $(dayId).val();
+    var roomNo     = $(roomId).val();
+    var startTime  = $(startId).text();
+    var endTime    = $(endId).text();
+  
+    $(dayId).datepicker('option', 'numberOfMonths', [1, 3]); 
+    $(dayId).datepicker("option", "minDate", "#{rawJS curDateStr}");
+    $(dayId).datepicker("option", "maxDate", "#{rawJS endDateStr}");
+    $(dayId).datepicker("option", "onSelect", onDateSelect);
+
+    destroyDataTable();
+    setupDataTable(bookingDay, roomNo); 
     
-    $(dp).datepicker('option', 'numberOfMonths', [1, 3]); 
-    $(dp).datepicker("option", "minDate", "#{rawJS curDateStr}");
-    $(dp).datepicker("option", "maxDate", "#{rawJS endDateStr}");
-
-    function showCurrentQueryDate(qd){        
-        $("#myShowDate").html("预订情况: [<span style='color:#E8A02B'> <b><i>" + qd + "</i></b> </span>]");
+    /// 2. all callbacks needed.
+    // 当在日期面板选中一个日期后触发此事件，参数为选择的日期和当前日期插件的实例
+    function onDateSelect(dateText, inst) {
+        bookingDay = dateText;
+        destroyDataTable();
+        setupDataTable(bookingDay, roomNo); 
     }
 
-    function setupDataTable(queryDay) {
+    $(startId).change(function () {
+        console.log($(this).val());
+    });
 
+    $(endId).change(function () {
+        console.log($(this).val());
+    });
+
+    $(roomId).change(function () {
+        roomNo = $(this).val();
+        destroyDataTable();
+        setupDataTable(bookingDay, roomNo); 
+    });
+
+    function setupDataTable(queryDay, queryRoom) {
         var titleColumns = [];
         titleColumns.push({field: "房间 / 时间", title: "房间 / 时间"})
         for (i = 7; i <= 24; i++) {
             titleColumns.push({
                 field: i,
-                title: "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + i.toString() + "点",
-                width: "200px"
+                title: "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + i.toString() + "点"
+                // width: "100%"
             });
         }
 
@@ -35,7 +68,6 @@ $(document).ready(function() {
             showToggle: true,
             showColumns: true,
             cache: false,           
-
             pageList: [5,8,10],
 
             // below is the ajax query and response process.
@@ -43,8 +75,9 @@ $(document).ready(function() {
             method: "GET",
             contentType: "application/json",           
             queryParams: function (params) {
-                params["queryDay"] = queryDay;
-                //console.log(params);
+                params["queryDay"]  = queryDay;
+                params["queryRoom"] = queryRoom;
+                console.log(params);
                 return params;
             },
 
@@ -66,12 +99,10 @@ $(document).ready(function() {
         });
 
         // calculate the cells need merge.
-        //console.log("finish setup dataTable.");
     }
 
     function destroyDataTable() {
         $("##{rawJS aNewTable}").bootstrapTable("destroy");
-        //this line is crutial for recreate the table.
         $("##{rawJS aNewTable}").empty(); 
     }
 });

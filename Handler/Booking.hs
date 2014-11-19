@@ -40,7 +40,7 @@ getBookingR = do
           let theLevel = userLevel theUser
               theDay = getPreferDay (fmap T.strip mayDay)
               availableRoomPairs = getRoomPair . filterRoomByLevel theLevel $ roomEntities
-              theRoom = getPreferRoom mayRoomId availableRoomPairs              
+              theRoom = getPreferRoom mayRoomId availableRoomPairs
           (newbookingWidget, formEnctype) <- 
                    generateFormPost (newbookingForm theUserId theDay theRoom availableRoomPairs)
           defaultLayout $ do

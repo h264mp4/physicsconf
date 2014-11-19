@@ -12,7 +12,7 @@ import Data.Aeson(toJSON, object, (.=))
 -- 15 ge 
 fields :: [Text]
 fields = ["房间 / 时间","8","9","10","11","12","13","14","15","16",
-                     "17","18","19","20","21","22"]
+                       "17","18","19","20","21","22"]
 contents :: [[Text]]
 contents = [ ["1001", "彭兴涛<br />研讨会", "吴桃李<br />组会ing", "tao", "peng", "吴桃李，组会ing", "tao", 
                       "peng", "吴桃李，组会ing", "tao", "peng", "吴桃李，组会ing", 
@@ -41,8 +41,9 @@ fakeJsonRet = object $ [fakeDataName .= fakeDataRows, "total" .= toJSON (4::Int)
 
 getDayBookingStatusR :: Handler Value -- actually return a json.
 getDayBookingStatusR = do
-    maybeValue <- lookupGetParam "queryDay"
-    case maybeValue of
+    maybeDay <- lookupGetParam "queryDay"
+    maybeRoomId <- lookupGetParam "queryRoomId"
+    case maybeDay of
         Nothing -> liftIO $ print "not passed"
         Just x  -> liftIO $ print x
     return $ fakeJsonRet
