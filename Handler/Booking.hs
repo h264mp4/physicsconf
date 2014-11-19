@@ -24,6 +24,11 @@ import qualified Data.Text as T
 
 getBookingR :: Handler Html
 getBookingR = do
+    curDT <- liftIO getCurDayAndTime
+    let curDate = localDay curDT
+        endDate = addGregorianMonthsClip 2 curDate
+        curDateStr = show curDate
+        endDateStr = show endDate
     maid <- maybeAuthId
     case maid of 
       Nothing -> redirect (AuthR LoginR)

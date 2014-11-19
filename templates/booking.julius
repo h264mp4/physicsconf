@@ -8,8 +8,10 @@ $(document).ready(function() {
     var dp = document.getElementById("daySid");
     console.log(dp);
     console.log(dp.type);
-    $(dp).replaceWith('<input type="text">');
-    $(dp).datepicker();
+    
+    $(dp).datepicker('option', 'numberOfMonths', [1, 3]); 
+    $(dp).datepicker("option", "minDate", "#{rawJS curDateStr}");
+    $(dp).datepicker("option", "maxDate", "#{rawJS endDateStr}");
 
     function showCurrentQueryDate(qd){        
         $("#myShowDate").html("预订情况: [<span style='color:#E8A02B'> <b><i>" + qd + "</i></b> </span>]");
