@@ -6,6 +6,8 @@ import Yesod.Auth
 import Yesod.Form.Types
 import Yesod.Form.Jquery
 import Yesod.Form.Bootstrap3 
+import Yesod.Static
+import Settings.StaticFiles
 import Text.Julius(rawJS)
 import Text.Read(readMaybe)
 
@@ -41,10 +43,15 @@ getBookingR = do
               theDay = getPreferDay (fmap T.strip mayDay)
               availableRoomPairs = getRoomPair . filterRoomByLevel theLevel $ roomEntities
               theRoom = getPreferRoom mayRoomId availableRoomPairs
-          (newbookingWidget, formEnctype) <- 
+          (newWidget, formEnctype) <- 
                    generateFormPost (newbookingForm theUserId theDay theRoom availableRoomPairs)
+          -- very fucky bug, generated form will include jquery & jqueryUI, we have already 
+          -- included bootstrapTable eailier, but it won't work after reinclude jquery&ui
+          -- so we have to include it again, otherwise it will complain of undefined function.
+          -- what a fuck bug!! we hack it by using widget combine.
+          -- why javascript re included have no protection like c's header guard?
+          let newbookingWidget = newWidget >> (addScript $ StaticR js_bootstrap_table_min_js)
           defaultLayout $ do
-              newBookingFormId <- newIdent
               aNewTable <- newIdent
               $(widgetFile "booking")
 
@@ -120,7 +127,7 @@ newbookingForm :: UserId -> Maybe Day -> Maybe RoomId -> [(Text, RoomId)] -> For
 newbookingForm theUserId theDay theRoom roomPairs = renderBootstrap3 commonSimpleFormLayout $ 
     Record
         <$> pure theUserId
-        <*> areq (jqueryDayField  def{jdsChangeMonth = True}) daySetting theDay 
+        <*> areq (jqueryDayField2  def{jdsChangeMonth = True}) daySetting theDay 
         <*> areq (selectFieldList roomPairs) roomSetting theRoom
         <*> areq (selectFieldList hourStartPairs) startDaySetting Nothing
         <*> areq (selectFieldList hourEndPairs) endDaySetting Nothing
@@ -139,3 +146,55 @@ toHtmlBookingInfo bookingInfo roomNoStr = (
     "开始时间: " <> (T.pack . show . recordStartTime $ bookingInfo) <> "<br />  " <>
     "结束时间: " <> (T.pack . show . recordEndTime $ bookingInfo) <> "<br />  " <>
     "<br />")
+
+
+
+---- hacking for html5 input type=date
+jqueryDayField2 :: (RenderMessage site FormMessage, YesodJquery site) => JqueryDaySettings -> Field (HandlerT site IO) Day
+jqueryDayField2 jds = Field
+    { fieldParse = parseHelper $ maybe
+                  (Left MsgInvalidDay)
+                  Right
+              . readMay
+              . T.unpack
+    , fieldView = \theId name attrs val isReq -> do
+        toWidget [shamlet|
+$newline never
+<input id="#{theId}" name="#{name}" *{attrs} type="text" :isReq:required="" value="#{showVal val}">
+|]
+        --addScript' urlJqueryJs
+        --addScript' urlJqueryUiJs
+        --addStylesheet' urlJqueryUiCss
+        toWidget [julius|
+$(function(){
+    var i = document.getElementById("#{rawJS theId}");
+    if (i.type != "date") {
+        $(i).datepicker({
+            dateFormat:'yy-mm-dd',
+            changeMonth:#{jsBool $ jdsChangeMonth jds},
+            changeYear:#{jsBool $ jdsChangeYear jds},
+            numberOfMonths:#{rawJS $ mos $ jdsNumberOfMonths jds},
+            yearRange:#{toJSON $ jdsYearRange jds}
+        });
+    }
+});
+|]
+    , fieldEnctype = UrlEncoded
+    }
+  where
+    showVal = either id (T.pack . show)
+    jsBool True = toJSON True
+    jsBool False = toJSON False
+    mos (Left i) = show i
+    mos (Right (x, y)) = concat
+        [ "["
+        , show x
+        , ","
+        , show y
+        , "]"
+        ]
+
+    readMay :: Read a => String -> Maybe a
+    readMay s = case reads s of
+                (x, _):_ -> Just x
+                [] -> Nothing

@@ -25,31 +25,11 @@ $(document).ready(function() {
     $(dayId).datepicker("option", "minDate", "#{rawJS curDateStr}");
     $(dayId).datepicker("option", "maxDate", "#{rawJS endDateStr}");
     $(dayId).datepicker("option", "onSelect", onDateSelect);
-
-    setupDataTable(bookingDay, roomNo); 
     
+    setupDataTable(bookingDay, roomNo);
+
     /// 2. all callbacks needed.
     // 当在日期面板选中一个日期后触发此事件，参数为选择的日期和当前日期插件的实例
-    function onDateSelect(dateText, inst) {
-        bookingDay = dateText;
-        destroyDataTable();
-        setupDataTable(bookingDay, roomNo); 
-    };
-
-    $(startId).change(function () {
-        //console.log($(this).val());
-    });
-
-    $(endId).change(function () {
-        //console.log($(this).val());
-    });
-
-    $(roomId).change(function () {
-        roomNo = $(this).val();
-        destroyDataTable();
-        setupDataTable(bookingDay, roomNo); 
-    });
-
     function setupDataTable(queryDay, queryRoom) {
         var titleColumns = [];
         titleColumns.push({field: "房间 / 时间", title: "房间 / 时间"})
@@ -105,4 +85,24 @@ $(document).ready(function() {
         $("##{rawJS aNewTable}").bootstrapTable("destroy");
         $("##{rawJS aNewTable}").empty(); 
     };
+
+    function onDateSelect(dateText, inst) {
+        bookingDay = dateText;
+        destroyDataTable();
+        setupDataTable(bookingDay, roomNo); 
+    };
+
+    $(startId).change(function () {
+        //console.log($(this).val());
+    });
+
+    $(endId).change(function () {
+        //console.log($(this).val());
+    });
+
+    $(roomId).change(function () {
+        roomNo = $(this).val();
+        destroyDataTable();
+        setupDataTable(bookingDay, roomNo); 
+    });
 });
