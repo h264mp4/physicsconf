@@ -1,12 +1,12 @@
 $newline never
 \<!doctype html>
-<html class="no-js" lang="en">
+\<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+\<!--[if IE 7]> <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+\<!--[if IE 8]> <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+\<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"><!--<![endif]-->
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!--[if lt IE 9]>
-           <script src="/static/js/css3-mediaqueries.js">
-           <script src="/static/js/respond.1.4.2.min.js">
-        <![endif]-->
 
         <meta charset="UTF-8">
         <title>北京大学物理学院会议室管理系统
@@ -17,6 +17,12 @@ $newline never
 
         ^{pageHead pc}
        
+        \<!--[if lt IE 9]>
+        \<script src="/static/js/html5shiv.3.7.4.min.js"></script>
+        \<script src="/static/js/respond.1.4.2.min.js"></script>
+        \<script> alert("抱歉，您正使用低版本IE，我们可能无法正确支持。建议使用IE 10, IE 11, Firefox, Google Chrome 或 360浏览器（急速模式）。"); </script>
+        \<![endif]-->
+
         <script>
           document.documentElement.className = 
                            document.documentElement.className.replace(/\bno-js\b/,'js');
@@ -41,6 +47,3 @@ $newline never
             <div class="row">
                 <div class="col-md-10 ">
                     <pre align="center"> <em><b>Physics</b></em> © 2014 Peking University All Right Reserved </pre>
-
-
-<!-- <script src="/static/js/respond.1.4.2.min.js" type="text/javascript"> -->

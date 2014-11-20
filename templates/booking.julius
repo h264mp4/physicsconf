@@ -26,7 +26,6 @@ $(document).ready(function() {
     $(dayId).datepicker("option", "maxDate", "#{rawJS endDateStr}");
     $(dayId).datepicker("option", "onSelect", onDateSelect);
 
-    destroyDataTable();
     setupDataTable(bookingDay, roomNo); 
     
     /// 2. all callbacks needed.
@@ -35,14 +34,14 @@ $(document).ready(function() {
         bookingDay = dateText;
         destroyDataTable();
         setupDataTable(bookingDay, roomNo); 
-    }
+    };
 
     $(startId).change(function () {
-        console.log($(this).val());
+        //console.log($(this).val());
     });
 
     $(endId).change(function () {
-        console.log($(this).val());
+        //console.log($(this).val());
     });
 
     $(roomId).change(function () {
@@ -74,10 +73,11 @@ $(document).ready(function() {
             url: "@{DayBookingStatusR}",
             method: "GET",
             contentType: "application/json",           
+
             queryParams: function (params) {
                 params["queryDay"]  = queryDay;
                 params["queryRoom"] = queryRoom;
-                console.log(params);
+                // console.log(params);
                 return params;
             },
 
@@ -99,10 +99,10 @@ $(document).ready(function() {
         });
 
         // calculate the cells need merge.
-    }
+    };
 
     function destroyDataTable() {
         $("##{rawJS aNewTable}").bootstrapTable("destroy");
         $("##{rawJS aNewTable}").empty(); 
-    }
+    };
 });
