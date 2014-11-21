@@ -1,0 +1,8 @@
+.form-horizontal .control-label {
+    text-align: left;
+}
+
+.right-with-border {
+    // border-right: 2px solid #E8E8E8;
+}
+
