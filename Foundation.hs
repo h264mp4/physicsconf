@@ -5,7 +5,7 @@ import Prelude
 import Yesod
 import Yesod.Static
 import Yesod.Auth
-import Yesod.Form.Jquery(YesodJquery (..), jqueryDayField)
+import Yesod.Form.Jquery(YesodJquery)
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
 import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
@@ -20,10 +20,8 @@ import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
 import Data.Time
-import Data.Int
 import Data.Text(Text)
 import System.Locale
-import Handler.MiscTypes
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
