@@ -40,11 +40,12 @@ getBookingR = do
           mayDay <- lookupGetParam "selectDay"          
           mayRoomId <- lookupGetParam "selectRoom"
           let theLevel = userLevel theUser
-              theDay = getPreferDay (fmap T.strip mayDay)
+              mayTheDay = mayStrToDay (fmap T.strip mayDay)
               availableRoomPairs = getRoomPair . filterRoomByLevel theLevel $ roomEntities
               theRoom = getPreferRoom mayRoomId availableRoomPairs
           (newWidget, formEnctype) <- 
-                   generateFormPost (newbookingForm theUserId theDay theRoom availableRoomPairs)
+                   generateFormPost (newbookingForm theUserId mayTheDay 
+                                                    theRoom availableRoomPairs)
           -- very fucky bug, generated form will include jquery & jqueryUI, we have already 
           -- included bootstrapTable eailier, but it won't work after reinclude jquery&ui
           -- so we have to include it again, otherwise it will complain of undefined function.
@@ -54,6 +55,7 @@ getBookingR = do
           defaultLayout $ do
               aNewTable <- newIdent
               recordFormId <- newIdent
+              showDateText <- newIdent
               $(widgetFile "booking")
 
 postBookingR :: Handler Html
@@ -67,7 +69,7 @@ postBookingR = do
           mayDay <- lookupGetParam "selectDay"          
           mayRoomId <- lookupGetParam "selectRoom"
           let theLevel = userLevel theUser
-              theDay = getPreferDay (fmap T.strip mayDay)
+              theDay = mayStrToDay (fmap T.strip mayDay)
               availableRoomPairs = getRoomPair . filterRoomByLevel theLevel $ roomEntities
               theRoom = getPreferRoom mayRoomId availableRoomPairs              
              
@@ -92,15 +94,6 @@ postBookingR = do
 
 filterRoomByLevel theLevel = filter (\(Entity _ roomInfo) -> (roomLevel roomInfo) <= theLevel)
 getRoomPair = map (\(Entity roomid roominfo) -> (roomNumber roominfo, roomid))    
-
--- mayDay format: YYYY-MM-DD
-getPreferDay mayDay 
-    | mayDay == Nothing = Nothing
-    | otherwise = let dayText = fromJust mayDay
-                      ymd = map (read . T.unpack) $ T.splitOn "-" dayText
-                  in if (T.length dayText /= 10) || (length ymd /= 3)
-                     then Nothing 
-                     else Just $ fromGregorian (fromIntegral $ ymd!!0) (ymd!!1) (ymd!!2)
 
 -- a string of int64 key 
 getPreferRoom mayRoomId availableRoomPairs = 
@@ -141,8 +134,9 @@ newbookingForm theUserId theDay theRoom roomPairs = renderBootstrap3 commonSimpl
 
     where       
     hourStartPairs, hourEndPairs :: [(Text, TimeOfDay)]
-    hourStartPairs = zipWith toHourPair [7..23] [7..23]
-    hourEndPairs   = zipWith toHourPair [8..24] [8..24]
+    hourStartPairs = zipWith toHourPair bookingStartPeriod bookingStartPeriod
+    hourEndPairs   = zipWith toHourPair bookingEndPeriod bookingEndPeriod
+
     toHourPair a b = (T.pack $ show a, TimeOfDay b 0 0)
     roomUsagePairs :: [(Text, RoomUsage)]
     roomUsagePairs = [ ("组会"   , UsageZuHui)
@@ -160,4 +154,3 @@ toHtmlBookingInfo bookingInfo roomNoStr = (
     "结束时间: "   <> (T.pack . show . recordEndTime $ bookingInfo)   <> "<br />  " <>
     "会议室用途: " <> (getRoomUsageInfo bookingInfo)                  <> "<br />  " <>
     "<br />" )
-         

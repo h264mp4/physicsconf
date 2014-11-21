@@ -7,13 +7,10 @@ import Handler.DBOperation
 import Handler.MiscTypes
 import Handler.Utils
 import Data.Maybe(isJust, fromJust)
-import Data.Aeson(object, (.=))
-import Yesod.Form.Jquery
 import Yesod.Form.Bootstrap3 
 import Database.Persist.Sql(toSqlKey)
 
-import Data.Int(Int64)
-import Data.Text(unpack)
+import qualified Data.Text as T (unpack)
 import Data.Conduit
 import Data.Text.Encoding(encodeUtf8)
 import Data.ByteString.Lazy(fromStrict)
@@ -50,7 +47,9 @@ postAddUserR = do
                      liftIO $ print formInfo
                      defaultLayout $ do
                        backNavWidget ("用户信息已保存"::Text) (toHtmlUserInfo formInfo) ManageUserR
-
+        _ -> defaultLayout $ do
+                backNavWidget emptyText ("内部错误，请重试" :: Text) ManageUserR
+ 
 getListUserR :: Handler Value
 getListUserR = do
     users <- runDB $ listUserProfile
@@ -70,7 +69,7 @@ getEditUserR = do
     if not bValidData
        then notFound
        else do
-            let theId = (toSqlKey . read . unpack . fromJust $ mayId) :: UserId
+            let theId = (toSqlKey . read . T.unpack . fromJust $ mayId) :: UserId
             userInfo <- runDB $ get404 theId
             (editUserWidget, formEnctype) <- generateFormPost (editUserForm userInfo)
             let submission = Nothing :: Maybe (FileInfo, Text)
@@ -109,7 +108,7 @@ deleteDeleteUserR = do
 
     where 
     doDelete deleteObj = do
-        let theId = toSqlKey $ (read . unpack $ deleteId deleteObj)
+        let theId = toSqlKey $ (read . T.unpack $ deleteId deleteObj)
         liftIO $ print theId
         runDB $ deleteUser (theId :: Key User)
         return ()

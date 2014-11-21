@@ -4,10 +4,13 @@ module Handler.Utils where
 import Yesod.Form.Bootstrap3 
 
 import Prelude
+import Data.Text
 import Data.Time
+import Data.Maybe
+import Data.Int(Int64)
 import Data.String(IsString)
 import System.IO.Unsafe(unsafePerformIO)
-import Data.Text
+import Database.Persist.Sql(toSqlKey)
 
 myTimeZone :: TimeZone
 myTimeZone = unsafePerformIO $ getCurrentTimeZone
@@ -35,6 +38,9 @@ emptyString = []
 
 emptyText :: Text
 emptyText = ""
+
+bookingStartPeriod = [7..23]
+bookingEndPeriod   = [8..24]
 
 commonSimpleFormLayout = BootstrapHorizontalForm
                          {

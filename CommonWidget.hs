@@ -5,11 +5,7 @@ import Import
 import Yesod.Form.Jquery
 import Yesod.Form.Bootstrap3 
 
-import Data.Maybe(fromJust)
-import Data.Aeson(ToJSON(..), object, (.=))
 import Text.Julius(rawJS)
-import Text.Julius(rawJS)
-import Text.Read(readMaybe)
 import qualified Data.Text as T
 
 import Handler.Utils

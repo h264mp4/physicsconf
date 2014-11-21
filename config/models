@@ -1,5 +1,5 @@
 User
-    email Text
+    email Text Asc
     password Text
     name Text
     level Level
@@ -12,27 +12,27 @@ Room
     level Level
     available Bool
     validTime Day
-    firstAdd UTCTime
+    firstAdd UTCTime Asc
     UniqueRoomNo number
     deriving Show
 
 Record
     userId UserId
-    day Day
+    day Day Desc
     roomId RoomId
     startTime TimeOfDay
     endTime TimeOfDay
     bookingTime UTCTime
     roomUsage RoomUsage
     otherUsage Text Maybe
-    cancel Bool
+    cancel Bool default=false
     UniqueRecord day roomId startTime endTime
     deriving Show
 
 DayRecords
     ids [RecordId]
-    day Day
-    UniqueDay day
+    day Day Desc
+    UniqueDay day 
     deriving Show
 
 -- By default this file is used in Model.hs (which is imported by Foundation.hs)

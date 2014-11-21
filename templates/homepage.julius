@@ -27,7 +27,7 @@ $(document).ready(function() {
         for (i = 7; i < 24; i++) {
             titleColumns.push({
                 field: i,
-                title: "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + i.toString() + "点",
+                title:  i.toString() + "点" + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ",
                 width: "200px"
             });
         }

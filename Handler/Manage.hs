@@ -3,9 +3,6 @@ module Handler.Manage where
 
 import Import
 import CommonWidget
-import Handler.DBOperation
-import Handler.MiscTypes
-import Handler.Utils
 
 ------------------------------------------------------------------------------------------
 ---- Admin Manage Page

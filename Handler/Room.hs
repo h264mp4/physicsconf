@@ -70,14 +70,11 @@ getListRoomR = do
 -- edit room will only edit the valid date / available / level
 getEditRoomR :: Handler Html
 getEditRoomR = do
-    mayId <- lookupGetParam "editId"
-    liftIO $ print $ "get editroom param: "
-    liftIO $ print $ mayId
-    let bValidData = isJust mayId
-    if not bValidData
-       then notFound
-       else do
-            let theId = (toSqlKey . read . unpack . fromJust $ mayId) :: RoomId
+    mayIdStr <- lookupGetParam "editId"
+    let mayId = (mayStrToSqlKey mayIdStr) :: Maybe RoomId
+    case mayId of
+        Nothing -> notFound
+        Just theId -> do
             roomInfo <- runDB $ get404 theId
             (editRoomWidget, formEnctype) <- generateFormPost (editRoomForm $ Just roomInfo)
             let submission = Nothing :: Maybe (FileInfo, Text)
@@ -106,19 +103,19 @@ deleteDeleteRoomR :: Handler Value
 deleteDeleteRoomR = do
     texts <- rawRequestBody $$ CT.decode CT.utf8 =$ CL.consume
     liftIO $ print texts
-    let mayId = decode . fromStrict . encodeUtf8 $ texts !! 0
-        bValidData = isJust mayId
+    let mayObj = decode . fromStrict . encodeUtf8 $ texts !! 0
+        bValidData = isJust mayObj
     if bValidData
        then do
-            doDelete $ fromJust mayId
+            doDelete $ fromJust mayObj
             return $ object $ [("ret" :: Text) .= ("ok" :: Text)]
        else return $ object $ [("ret" :: Text) .= ("invalid data" :: Text)]
 
     where 
     doDelete deleteObj = do
-        let theId = toSqlKey . read . unpack . deleteId $ deleteObj
-        runDB $ deleteRoom (theId :: Key Room)
-        return ()
+        case strToSqlKey . deleteId $ deleteObj of
+            Nothing -> return ()
+            Just theId -> runDB $ deleteRoom (theId :: Key Room) >> return ()
 
 ------------------------------------------------------------------------------------------
 ---- other helpers

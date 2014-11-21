@@ -32,12 +32,20 @@ $(document).ready(function() {
     
     $(otherUsageId).hide(); // initial status of otherRoomUsage
     setupDataTable(bookingDay, roomNo);
+    showDateBelowBookingStatus(bookingDay);
 
     /// 2. all callbacks needed.
+    function showDateBelowBookingStatus(selectDate) {
+        $("##{rawJS showDateText}").empty();
+        $("##{rawJS showDateText}").html("[<span style='color:#E8A02B'> <b><i>" + 
+                                         selectDate + "</i></b> </span>] 预订情况");
+    };
+
     function onDateSelect(dateText, inst) {
         bookingDay = dateText;
         destroyDataTable();
         setupDataTable(bookingDay, roomNo); 
+        showDateBelowBookingStatus(dateText);
     };
 
     $(startId).change(function () {
@@ -86,19 +94,19 @@ $(document).ready(function() {
     function setupDataTable(queryDay, queryRoom) {
         var titleColumns = [];
         titleColumns.push({field: "房间 / 时间", title: "房间 / 时间"})
-        for (i = 7; i <= 24; i++) {
+        for (i = 7; i < 24; i++) {
             titleColumns.push({
                 field: i,
-                title: "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + i.toString() + "点"
+                title: i.toString() + "点" + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp "
                 // width: "100%"
             });
         }
 
         $("##{rawJS aNewTable}").bootstrapTable({
             striped: true,
-            pagination: true,
+            pagination: false,
             showToggle: true,
-            showColumns: true,
+            showColumns: false,
             cache: false,           
             pageList: [5,8,10],
 

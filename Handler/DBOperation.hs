@@ -5,7 +5,7 @@ import Network.Mail.SMTP
 import Data.Maybe(fromJust)
 import Database.Persist.Class
 import Database.Persist.Types
-
+import Control.Concurrent(forkIO)
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
 
@@ -97,7 +97,7 @@ bookingRoom newRecord@(Record theUserId theDay theRoomId
             maybeRoom <- get theRoomId
 
             -- email the user
-            liftIO $ emailNotification newRecord (fromJust maybeUser) 
+            liftIO $ forkIO $ emailNotification newRecord (fromJust maybeUser) 
                                (fromJust maybeRoom) BookingSuccess 
 
             -- we add this new recordId to DayRecords
@@ -122,7 +122,7 @@ cancelABooking recordId = do
                   aRoomId = recordRoomId aRecord
               maybeUser <- get aUserId          
               maybeRoom <- get aRoomId
-              liftIO $ emailNotification aRecord (fromJust maybeUser) 
+              liftIO $ forkIO $ emailNotification aRecord (fromJust maybeUser) 
                                          (fromJust maybeRoom) BookingCancel
               return ()
 
