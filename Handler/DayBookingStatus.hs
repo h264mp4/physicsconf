@@ -43,8 +43,49 @@ getDayBookingStatusR :: Handler Value -- actually return a json.
 getDayBookingStatusR = do
     maybeDay <- lookupGetParam "queryDay"
     maybeRoomId <- lookupGetParam "queryRoomId"
+    liftIO $ print "inside getDayBookingStatusR: "
+    liftIO $ print maybeDay 
+    liftIO $ print maybeRoomId 
     case maybeDay of
         Nothing -> liftIO $ print "not passed"
         Just x  -> liftIO $ print x
     return $ fakeJsonRet
 
+{-
+getDayBookingStatusR :: Handler Value -- actually return a json.
+getDayBookingStatusR = do
+    maybeDay <- lookupGetParam "queryDay"
+    maybeRoomId <- lookupGetParam "queryRoomId"
+    liftIO $ print "inside getDayBookingStatusR: "
+    liftIO $ print maybeDay 
+    liftIO $ print maybeRoomId 
+    case maybeDay of
+        Nothing -> sendResponseStatus status404 ("Not a valid day" :: Text)
+        Just theDay -> do
+            mayRids <- runDB $ getRecordIdsByDay theDay
+            case mayRids of
+                Nothing -> return allAvailable
+                Just rids -> do
+                    liftIO $ print ("Looking for booking info of day " ++ show theDay)
+                    getBookingInfos rids maybeRoomId
+
+
+getBookingInfos :: [Record Id] -> Maybe RoomId -> Handler Value
+getBookingInfos rids maybeRoomId = do
+    records <- mapM (runDB $ get404) rids --won't too much, for one day can at max have 16 records.
+    case maybeRoomId of
+        Just theRoomId -> do
+            -- kickout Cancel Records 
+            let matchRecords = filter (\ r -> recordRoomId r == theRoomId &&
+                                              recordCancel r == False      ) records
+                            
+
+               
+             ["1002", "无", "吴桃李，组会2", "彭兴涛,研讨会", "无", 
+                      "吴桃李，组会2", "t2", "无", "吴桃李，组会2", "t2", 
+                      "无", "吴桃李，组会2", "t2", "无", "吴桃李，组会2", "t2"],
+
+
+allAvailable =                 
+       
+-}

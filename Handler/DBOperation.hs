@@ -82,7 +82,8 @@ deleteRoom = delete -- theRoomId
 -- | Booking management: bookingRoom,  deleteABooking
 
 -- | TODO: we should check timespan overlapping
-bookingRoom newRecord@(Record theUserId theDay theRoomId startTime endTime curTime _) = do
+bookingRoom newRecord@(Record theUserId theDay theRoomId 
+                              startTime endTime curTime _ _ _) = do
     -- check whether the record exist
     maybeExist <- getBy $ UniqueRecord theDay theRoomId startTime endTime
     case maybeExist of 
@@ -91,7 +92,6 @@ bookingRoom newRecord@(Record theUserId theDay theRoomId startTime endTime curTi
             return Nothing
         Nothing -> do
             --curTime <- liftIO $ getCurrentTime
-            --let newRecord = Record theUserId theRoomId theDay startTime endTime curTime False
             newRecordId <- insert newRecord
             maybeUser <- get theUserId
             maybeRoom <- get theRoomId
@@ -154,7 +154,7 @@ emailNotification aRecord aUser aRoom status = do
                               T.unpack roomText ++ " [from " ++ (show startTime) ++ " to " 
                               ++ (show endTime) ++ 
                               ", " ++ show year ++ "-" ++ show month ++ "-" ++ show day ++ "]")
-        allParts    = plainTextPart (TL.pack "This is a test")
+        allParts    = plainTextPart (TL.pack $ show $ getRoomUsageInfo aRecord)
         theMail     = simpleMail fromAddress toAddress ccAddress bccAddress subject [allParts]
 
     sendMailWithLogin viaHost adminUserName adminPassword theMail 
@@ -182,7 +182,7 @@ getRecordIdsByDay theDay = do
         Nothing -> do
                    liftIO $ print "invlaid day as the key, no corresponding records"
                    return Nothing
-        Just (Entity theId theRecords) -> return $ Just (theId, dayRecordsIds theRecords)
+        Just (Entity _ theRecords) -> return . Just $ dayRecordsIds theRecords
 
 -- lookup by id: User or Room
 getOnePieceInfoByDBId theId = do

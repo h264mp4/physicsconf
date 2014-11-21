@@ -1,7 +1,6 @@
 {-# LANGUAGE TupleSections, OverloadedStrings, RankNTypes, BangPatterns #-}
 module Handler.Utils where
 
-import Yesod.Form.Jquery
 import Yesod.Form.Bootstrap3 
 
 import Prelude
@@ -36,7 +35,6 @@ emptyString = []
 
 emptyText :: Text
 emptyText = ""
-
 
 commonSimpleFormLayout = BootstrapHorizontalForm
                          {

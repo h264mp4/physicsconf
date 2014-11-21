@@ -23,6 +23,8 @@ Record
     startTime TimeOfDay
     endTime TimeOfDay
     bookingTime UTCTime
+    roomUsage RoomUsage
+    otherUsage Text Maybe
     cancel Bool
     UniqueRecord day roomId startTime endTime
     deriving Show

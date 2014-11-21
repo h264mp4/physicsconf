@@ -12,11 +12,15 @@ data Level = AuthNormal | AuthAdvance | AuthAdmin
     deriving (Show, Read, Eq, Ord)
 derivePersistField "Level"
 
+data RoomUsage = UsageZuHui     | UsageXueShuBaoGao | UsageXueShuHuiYi | 
+                 UsageYanTaoHui | UsageOther
+    deriving (Show, Read, Eq, Ord)
+derivePersistField "RoomUsage"
+
 -- start and end of a room's booking 
 data Timespan = Timespan TimeOfDay TimeOfDay
     deriving (Show, Read, Eq, Ord)
 derivePersistField "Timespan"
-
 
 -- for jason serialize, using Generic
 data DeleteId = DeleteId {deleteId :: Text}

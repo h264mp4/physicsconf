@@ -9,6 +9,8 @@ $(document).ready(function() {
     var roomId  = document.getElementById("roomSid");
     var startId = document.getElementById("startDaySid");
     var endId   = document.getElementById("endDaySid");
+    var usageId = document.getElementById("roomUsageSid");
+    var otherUsageId = document.getElementById("otherUsageSid");
 
     //console.log(dayId);
     //console.log(roomId);
@@ -20,16 +22,67 @@ $(document).ready(function() {
     var roomNo     = $(roomId).val();
     var startTime  = $(startId).text();
     var endTime    = $(endId).text();
-  
+    var usageText  = $(usageId).val();
+    var usageLen   = $(usageId).children('option').length;
+
     $(dayId).datepicker('option', 'numberOfMonths', [1, 3]); 
     $(dayId).datepicker("option", "minDate", "#{rawJS curDateStr}");
     $(dayId).datepicker("option", "maxDate", "#{rawJS endDateStr}");
     $(dayId).datepicker("option", "onSelect", onDateSelect);
     
+    $(otherUsageId).hide(); // initial status of otherRoomUsage
     setupDataTable(bookingDay, roomNo);
 
     /// 2. all callbacks needed.
-    // 当在日期面板选中一个日期后触发此事件，参数为选择的日期和当前日期插件的实例
+    function onDateSelect(dateText, inst) {
+        bookingDay = dateText;
+        destroyDataTable();
+        setupDataTable(bookingDay, roomNo); 
+    };
+
+    $(startId).change(function () {
+        //console.log($(this).val());
+    });
+
+    $(endId).change(function () {
+        //console.log($(this).val());
+    });
+
+    $(roomId).change(function () {
+        roomNo = $(this).val();
+        console.log("new booking room: " + roomNo);
+        destroyDataTable();
+        setupDataTable(bookingDay, roomNo); 
+    });
+
+    $(usageId).change(function () {
+        var tmpVal = $(this).val();
+        if (tmpVal == usageLen) { // "其他"
+            $(otherUsageId).show();
+        }
+        else 
+        {
+            $(otherUsageId).hide();
+        }
+    });
+
+    $('##{rawJS recordFormId}').on('submit', 
+        function() {
+            if ($(startId).val() > $(endId).val())
+            {
+               alert("会议室预定时间段非法");
+               return false;
+            }
+            if ($(usageId).val() == usageLen) {
+                if (isNullOrEmpty(trim ($(otherUsageId).val()))) {
+                    alert("请填写具体的会议室用途");
+                    return false;
+                }
+            } 
+            return true;
+        }
+    );
+
     function setupDataTable(queryDay, queryRoom) {
         var titleColumns = [];
         titleColumns.push({field: "房间 / 时间", title: "房间 / 时间"})
@@ -56,8 +109,7 @@ $(document).ready(function() {
 
             queryParams: function (params) {
                 params["queryDay"]  = queryDay;
-                params["queryRoom"] = queryRoom;
-                // console.log(params);
+                params["queryRoomId"] = queryRoom;
                 return params;
             },
 
@@ -86,23 +138,16 @@ $(document).ready(function() {
         $("##{rawJS aNewTable}").empty(); 
     };
 
-    function onDateSelect(dateText, inst) {
-        bookingDay = dateText;
-        destroyDataTable();
-        setupDataTable(bookingDay, roomNo); 
-    };
+    /// other helpers
+    function trim(str){ //删除左右两端的空格
+　　     return str.replace(/(^\s*)|(\s*$)/g, "");
+　　 }
 
-    $(startId).change(function () {
-        //console.log($(this).val());
-    });
-
-    $(endId).change(function () {
-        //console.log($(this).val());
-    });
-
-    $(roomId).change(function () {
-        roomNo = $(this).val();
-        destroyDataTable();
-        setupDataTable(bookingDay, roomNo); 
-    });
+    function isNullOrEmpty(strVal) {
+        if (strVal == '' || strVal == null || strVal == undefined) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 });

@@ -9,9 +9,10 @@ import Database.Persist.Quasi
 import Database.Persist.Sql
 import Data.ByteString (ByteString)
 import Data.Time
-import Handler.MiscTypes
 import Data.Aeson(ToJSON(..), object, (.=))
 import qualified Data.Text(pack)
+
+import Handler.MiscTypes
 import Handler.Utils
 
 -- You can define all of your database entities in the entities file.
@@ -49,5 +50,24 @@ toLevelString lev
     | lev == AuthAdmin   = "管理员"
     | otherwise          = "Wrong Level"
 
+toRoomUsageString :: RoomUsage -> Text
+toRoomUsageString use 
+    | use == UsageZuHui        = "组会"
+    | use == UsageXueShuBaoGao = "学术报告"
+    | use == UsageXueShuHuiYi  = "学术会议"
+    | use == UsageYanTaoHui    = "研讨会" 
+    | use == UsageOther        = "期他" 
+    | otherwise                = "无标明" 
+
+getRoomUsageInfo :: Record -> Text
+getRoomUsageInfo bookingInfo = 
+    let usage = recordRoomUsage bookingInfo
+     in case usage of
+         UsageOther -> 
+             case recordOtherUsage bookingInfo of
+                 Nothing -> "无标明"
+                 Just u  -> u
+         _          -> toRoomUsageString usage
+                                
 authLevel :: [(Text, Level)]
 authLevel = [("普通", AuthNormal), ("领导", AuthAdvance),("管理员", AuthAdmin)]

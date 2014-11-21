@@ -53,6 +53,7 @@ getBookingR = do
           let newbookingWidget = newWidget >> (addScript $ StaticR js_bootstrap_table_min_js)
           defaultLayout $ do
               aNewTable <- newIdent
+              recordFormId <- newIdent
               $(widgetFile "booking")
 
 postBookingR :: Handler Html
@@ -121,6 +122,8 @@ daySetting      = FieldSettings ("预定日期") Nothing (Just "daySid") Nothing
 roomSetting     = FieldSettings ("会议室") Nothing (Just "roomSid") Nothing []
 startDaySetting = FieldSettings ("开始时间") Nothing (Just "startDaySid") Nothing []
 endDaySetting   = FieldSettings ("结束时间") Nothing (Just "endDaySid") Nothing []
+roomUsageSetting = FieldSettings ("会议室用途") Nothing (Just "roomUsageSid") Nothing []
+otherUsageSetting = FieldSettings ("") Nothing (Just "otherUsageSid") Nothing []
 
 -- using jsp to do all validation.
 newbookingForm :: UserId -> Maybe Day -> Maybe RoomId -> [(Text, RoomId)] -> Form Record
@@ -132,69 +135,29 @@ newbookingForm theUserId theDay theRoom roomPairs = renderBootstrap3 commonSimpl
         <*> areq (selectFieldList hourStartPairs) startDaySetting Nothing
         <*> areq (selectFieldList hourEndPairs) endDaySetting Nothing
         <*> lift (liftIO $ getCurrentTime)
+        <*> areq (selectFieldList roomUsagePairs) roomUsageSetting Nothing
+        <*> aopt textField otherUsageSetting Nothing
         <*> pure False
+
     where       
     hourStartPairs, hourEndPairs :: [(Text, TimeOfDay)]
     hourStartPairs = zipWith toHourPair [7..23] [7..23]
     hourEndPairs   = zipWith toHourPair [8..24] [8..24]
     toHourPair a b = (T.pack $ show a, TimeOfDay b 0 0)
+    roomUsagePairs :: [(Text, RoomUsage)]
+    roomUsagePairs = [ ("组会"   , UsageZuHui)
+                      ,("学术会议", UsageXueShuHuiYi)
+                      ,("学术报告", UsageXueShuBaoGao)
+                      ,("研讨会"  , UsageYanTaoHui)
+                      ,("其他"    , UsageOther)
+                     ]
 
 toHtmlBookingInfo :: Record -> Text -> Text
 toHtmlBookingInfo bookingInfo roomNoStr = (
-    "预订日期: " <> (T.pack . show . recordDay $ bookingInfo) <> "<br />  " <>
-    "预订会议室: " <> (roomNoStr) <> "<br />  " <>
-    "开始时间: " <> (T.pack . show . recordStartTime $ bookingInfo) <> "<br />  " <>
-    "结束时间: " <> (T.pack . show . recordEndTime $ bookingInfo) <> "<br />  " <>
-    "<br />")
-
-
-
----- hacking for html5 input type=date
-jqueryDayField2 :: (RenderMessage site FormMessage, YesodJquery site) => JqueryDaySettings -> Field (HandlerT site IO) Day
-jqueryDayField2 jds = Field
-    { fieldParse = parseHelper $ maybe
-                  (Left MsgInvalidDay)
-                  Right
-              . readMay
-              . T.unpack
-    , fieldView = \theId name attrs val isReq -> do
-        toWidget [shamlet|
-$newline never
-<input id="#{theId}" name="#{name}" *{attrs} type="text" :isReq:required="" value="#{showVal val}">
-|]
-        --addScript' urlJqueryJs
-        --addScript' urlJqueryUiJs
-        --addStylesheet' urlJqueryUiCss
-        toWidget [julius|
-$(function(){
-    var i = document.getElementById("#{rawJS theId}");
-    if (i.type != "date") {
-        $(i).datepicker({
-            dateFormat:'yy-mm-dd',
-            changeMonth:#{jsBool $ jdsChangeMonth jds},
-            changeYear:#{jsBool $ jdsChangeYear jds},
-            numberOfMonths:#{rawJS $ mos $ jdsNumberOfMonths jds},
-            yearRange:#{toJSON $ jdsYearRange jds}
-        });
-    }
-});
-|]
-    , fieldEnctype = UrlEncoded
-    }
-  where
-    showVal = either id (T.pack . show)
-    jsBool True = toJSON True
-    jsBool False = toJSON False
-    mos (Left i) = show i
-    mos (Right (x, y)) = concat
-        [ "["
-        , show x
-        , ","
-        , show y
-        , "]"
-        ]
-
-    readMay :: Read a => String -> Maybe a
-    readMay s = case reads s of
-                (x, _):_ -> Just x
-                [] -> Nothing
+    "预订日期: "   <> (T.pack . show . recordDay $ bookingInfo)       <> "<br />  " <>
+    "预订会议室: " <> (roomNoStr)                                     <> "<br />  " <>
+    "开始时间: "   <> (T.pack . show . recordStartTime $ bookingInfo) <> "<br />  " <>
+    "结束时间: "   <> (T.pack . show . recordEndTime $ bookingInfo)   <> "<br />  " <>
+    "会议室用途: " <> (getRoomUsageInfo bookingInfo)                  <> "<br />  " <>
+    "<br />" )
+         

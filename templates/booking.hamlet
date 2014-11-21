@@ -3,11 +3,12 @@
         <input class="btn btn-info" type="button" value="返回" onclick="window.location.href='@{HomeR}'">       
         <br>
         <br>
-        <form class="form-horizontal control-label" method=post action=@{BookingR} enctype=#{formEnctype}>
+        <form class="form-horizontal control-label" id="#{recordFormId}" method=post action=@{BookingR} enctype=#{formEnctype}>
             ^{newbookingWidget}
-            <br>
+            <br>            
             <input class="btn btn-primary" type="submit" value="预定">
+        <br>
 
     <div class="col-md-8">
-        <div class="row">
+        <div class="row">            
             <div class="col-md-12" id="#{aNewTable}">

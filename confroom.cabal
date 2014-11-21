@@ -85,7 +85,8 @@ library
                  , resourcet                     >= 1.1.2.3
                  , conduit-extra                 >= 1.1.4
                  , vector                        >= 0.10.0.1
-                 , unordered-containers          >=0.2.3.0
+                 , unordered-containers          >= 0.2.3.0
+                 , http-types                    >= 0.8.5
     -- see https://github.com/yesodweb/yesod/issues/814
     if !os(windows)
         build-depends: unix

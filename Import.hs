@@ -30,3 +30,4 @@ infixr 5 <>
 
 -- other imports
 import           Data.Time            as Import hiding (parseTime)
+import           Network.HTTP.Types   as Import (status404)
