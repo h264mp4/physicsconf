@@ -11,45 +11,93 @@ $(document).ready(function() {
     var endId   = document.getElementById("endDaySid");
     var usageId = document.getElementById("roomUsageSid");
     var otherUsageId = document.getElementById("otherUsageSid");
-
-    //console.log(dayId);
-    //console.log(roomId);
-    //console.log(startId);
-    //console.log(endId);
-    //console.log("#{rawJS curDateStr}");
-
+    /// further init.
     var bookingDay = $(dayId).val();
     var roomNo     = $(roomId).val();
-    var startTime  = $(startId).text();
-    var endTime    = $(endId).text();
-    var usageText  = $(usageId).val();
     var usageLen   = $(usageId).children('option').length;
 
+    /// merge columns after load the remote data.
     $(dayId).datepicker('option', 'numberOfMonths', [1, 3]); 
     $(dayId).datepicker("option", "minDate", "#{rawJS curDateStr}");
     $(dayId).datepicker("option", "maxDate", "#{rawJS endDateStr}");
     $(dayId).datepicker("option", "onSelect", onDateSelect);
     
     $(otherUsageId).hide(); // initial status of otherRoomUsage
-    setupDataTable(bookingDay, roomNo);
+    setupDataTable(bookingDay, roomNo)
     showDateBelowBookingStatus(bookingDay);
 
     /// 2. all callbacks needed.
+    // [[1..20]]
+    var hourInUsing = [];
+    function mergeColumnAndCalcHourInUsing(mergeDatas) {
+        var i = 0,
+            wouldMerge = [];
+                
+        for (i=0; i < mergeDatas.length; i++) {
+            var j = 7; // skip the first element of room number.
+            // the last element will be checked in the inner while loop.
+            while (j < 23) { 
+                var k = j + 1,
+                    count = 1,
+                    tmpVal;
+ 
+                if (mergeDatas[i].hasOwnProperty(j.toString())){
+                    tmpVal = mergeDatas[i][j.toString()];
+                } else {
+                    tmpVal = "无";
+                }
+                while (tmpVal !== "无" 
+                       && k < 24 // note: here using 24 to check '23'
+                       && mergeDatas[i].hasOwnProperty(k.toString())
+                       && tmpVal === mergeDatas[i][k.toString()])  
+                {
+                    count += 1;
+                    if (i === 0) { // booking only has data length 1, which is i == 0.
+                        hourInUsing.push(k);
+                    }
+                    k += 1;
+                }
+                if (count > 1) {
+                    wouldMerge.push([i, j, count]);
+                }
+                if (i === 0 && tmpVal !== "无") {
+                    hourInUsing.push(j); // we push j.
+                }
+      
+                j += count;                 
+            }
+        }
+
+        for (i=0; i < wouldMerge.length; i++) {
+            $("##{rawJS aNewTable}").bootstrapTable('mergeCells', {
+                index  : wouldMerge[i][0],
+                field  : wouldMerge[i][1].toString(),
+                colspan: wouldMerge[i][2],
+                rowspan: 1
+            });
+        }
+        hourInUsing.sort(function(a,b){return a - b});
+        //console.log("hour in using: ");
+        //console.log(hourInUsing);
+    }
+
     function showDateBelowBookingStatus(selectDate) {
         $("##{rawJS showDateText}").empty();
         $("##{rawJS showDateText}").html("[<span style='color:#E8A02B'> <b><i>" + 
                                          selectDate + "</i></b> </span>] 预订情况");
-    };
+    }
 
     function onDateSelect(dateText, inst) {
         bookingDay = dateText;
         destroyDataTable();
         setupDataTable(bookingDay, roomNo); 
         showDateBelowBookingStatus(dateText);
-    };
+    }
 
     $(startId).change(function () {
-        //console.log($(this).val());
+        var startT = parseInt($(this).val()) + 6;
+        if (jQuery.inArray (startT, hourInUsing) !== -1)
+            alert(startT + "点已有预定");
     });
 
     $(endId).change(function () {
@@ -58,7 +106,6 @@ $(document).ready(function() {
 
     $(roomId).change(function () {
         roomNo = $(this).val();
-        console.log("new booking room: " + roomNo);
         destroyDataTable();
         setupDataTable(bookingDay, roomNo); 
     });
@@ -86,7 +133,14 @@ $(document).ready(function() {
                     alert("请填写具体的会议室用途");
                     return false;
                 }
-            } 
+            }
+    
+            var startT = parseInt($(startId).val()) + 6;
+            if (jQuery.inArray(startT, hourInUsing) !== -1)
+            {
+                alert(startT + "点已有预定");
+                return false;
+            }
             return true;
         }
     );
@@ -96,7 +150,7 @@ $(document).ready(function() {
         titleColumns.push({field: "房间 / 时间", title: "房间 / 时间"})
         for (i = 7; i < 24; i++) {
             titleColumns.push({
-                field: i,
+                field: i.toString(),
                 title: i.toString() + "点" + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp "
                 // width: "100%"
             });
@@ -122,6 +176,11 @@ $(document).ready(function() {
             },
 
             responseHandler: function(retData){
+                // when new data comming, we set hourInUsing to empty.
+                // hourInUsing.length = 0;
+                while(hourInUsing.length > 0) {
+                    hourInUsing.pop();
+                }
                 return retData.dataRows;
             },
 
@@ -135,16 +194,18 @@ $(document).ready(function() {
                 return {};
             },
 
+            onLoadSuccess : mergeColumnAndCalcHourInUsing,
+
             columns: titleColumns
         });
 
         // calculate the cells need merge.
-    };
+    }
 
     function destroyDataTable() {
         $("##{rawJS aNewTable}").bootstrapTable("destroy");
         $("##{rawJS aNewTable}").empty(); 
-    };
+    }
 
     /// other helpers
     function trim(str){ //删除左右两端的空格
@@ -157,5 +218,23 @@ $(document).ready(function() {
         } else {
             return false;
         }
+    }
+
+    function deepCopy(obj) {
+        if (Object.prototype.toString.call(obj) === '[object Array]') {
+            var out = [], i = 0, len = obj.length;
+            for ( ; i < len; i++ ) {
+                out[i] = arguments.callee(obj[i]);
+            }
+            return out;
+        }
+        if (typeof obj === 'object') {
+            var out = {}, i;
+            for ( i in obj ) {
+                out[i] = arguments.callee(obj[i]);
+            }
+            return out;
+        }
+        return obj;
     }
 });

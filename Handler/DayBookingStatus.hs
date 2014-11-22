@@ -10,17 +10,11 @@ import Handler.Utils
 
 fields :: [Text]
 fields = ["房间 / 时间","7", "8","9","10","11","12","13","14","15","16",
-                       "17","18","19","20","21","22", "23"]
+                       "17","18","19","20","21","22","23"]
 tableDataName = "dataRows"
 toDataRows = map (\ x -> object $ zipWith (\ k v -> (k, toJSON v)) fields x)
-toJsonRet rows = object $ [tableDataName .= toDataRows rows, "total" .= toJSON (4::Int)]
-
-contentsExample :: [[Text]]
-contentsExample = [ 
-            ["1001", "彭兴涛<br />研讨会", "吴桃李<br />组会ing", "tao", "peng", 
-             "吴桃李，组会ing", "none", "peng", "吴桃李，组会ing", "tao", "peng", 
-             "吴桃李，组会ing", "none", "peng", "吴桃李，组会ing", "tao"]
-           ]
+toJsonRet rows = object $ [tableDataName .= toDataRows rows, 
+                           "total" .= toJSON (length rows) ]
 
 getDayBookingStatusR :: Handler Value -- actually return a json.
 getDayBookingStatusR = do

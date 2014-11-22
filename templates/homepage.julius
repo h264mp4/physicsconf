@@ -9,25 +9,65 @@ $(document).ready(function() {
         var day = dateObj.getUTCDate();
         var newDate = year + "-" + month + "-" + day;
         return newDate; 
-    };
+    }
 
     // year-month-day, on server side, we call fromGregorian y m d to recreate the Day.
     var queryDate = getDateStr(new Date()); 
-    //console.log(queryDate);
 
     function showCurrentQueryDate(qd){        
-        $("#myShowDate").html("预订情况: [<span style='color:#E8A02B'> <b><i>" + qd + "</i></b> </span>]");
+        $("#myShowDate").html("预订情况: [<span style='color:#E8A02B'> <b><i>" + qd + 
+                              "</i></b> </span>]");
+    }
+
+    function mergeColumnAndCalcHourInUsing(mergeDatas) {
+        var i = 0,
+            wouldMerge = [];
+                
+        for (i=0; i < mergeDatas.length; i++) {
+            var j = 7; // skip the first element of room number.
+            // the last element will be checked in the inner while loop.
+            while (j < 23) { 
+                var k = j + 1,
+                    count = 1,
+                    tmpVal;
+ 
+                if (mergeDatas[i].hasOwnProperty(j.toString())){
+                    tmpVal = mergeDatas[i][j.toString()];
+                } else {
+                    tmpVal = "无";
+                }
+                while (tmpVal !== "无" 
+                       && k < 24 // note: here using 24 to check '23'
+                       && mergeDatas[i].hasOwnProperty(k.toString())
+                       && tmpVal === mergeDatas[i][k.toString()])  
+                {
+                    count += 1;
+                    k += 1;
+                }
+                if (count > 1) {
+                    wouldMerge.push([i, j, count]);
+                }      
+                j += count;                 
+            }
+        }
+
+        for (i=0; i < wouldMerge.length; i++) {
+            $("#myTableDataReal").bootstrapTable('mergeCells', {
+                index  : wouldMerge[i][0],
+                field  : wouldMerge[i][1].toString(),
+                colspan: wouldMerge[i][2],
+                rowspan: 1
+            });
+        }
     }
 
     function setupDataTable(queryDay) {
-        //console.log("start setup dataTable.");
-
         var titleColumns = [];
         titleColumns.push({field: "房间 / 时间", title: "房间 / 时间"})
         for (i = 7; i < 24; i++) {
             titleColumns.push({
-                field: i,
-                title:  i.toString() + "点" + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ",
+                field: i.toString(),
+                title: i.toString() + "点" + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ",
                 width: "200px"
             });
         }
@@ -52,6 +92,7 @@ $(document).ready(function() {
             },
 
             responseHandler: function(retData){
+                console.log(retData.dataRows);
                 return retData.dataRows;
             },
 
@@ -64,13 +105,11 @@ $(document).ready(function() {
                 }
                 return {};
             },
+ 
+            onLoadSuccess : mergeColumnAndCalcHourInUsing,
 
             columns: titleColumns
         });
-
-        // calculate the cells need merge.
-
-        //console.log("finish setup dataTable.");
     }
 
     function destroyDataTable() {
@@ -109,9 +148,7 @@ $(document).ready(function() {
             }
         }
     });
-
-    //console.log("finish kalendae");
-      
+     
     // other callbacks
     // 1. post button for booking
     $("##{rawJS newbookingId}").click(function (){                            
