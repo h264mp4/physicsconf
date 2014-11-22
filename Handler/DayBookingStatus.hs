@@ -51,28 +51,33 @@ getBookingInfos rids maybeRoomId = do
         Just theRoomId -> do
             roomInfo <- runDB $ get404 theRoomId
             -- only return one room's booking status
-            return $ toJsonRet [dayBookingStatusForOneRoom True (theRoomId, roomInfo) records]
+            toJsonRet <$> dayBookingStatusForOneRoom True (theRoomId, roomInfo) records
         Nothing -> getAllAvailableOfTheDay records Nothing
 
-dayBookingStatusForOneRoom' :: [Record] -> [Text]
-dayBookingStatusForOneRoom' records =
+dayBookingStatusForOneRoom' :: [(Record, User)] -> [Text]
+dayBookingStatusForOneRoom' mixInfos = do
     -- we traverse from 7 to 23
-    go bookingStartPeriod records
+    go bookingStartPeriod mixInfos
     where
     go [] _  = []
-    go (x:xs) records = 
-        let mayRecord = getRecordByHour x records
+    go (x:xs) mixInfos = 
+        let mayRecord = getRecordByHour x mixInfos
          in case mayRecord of
-                Nothing -> "none" : go xs records
-                Just aRecord -> (getRoomUsageInfo aRecord) : go xs records
+                Nothing -> "无" : go xs mixInfos -- no record
+                Just (aRecord, aUser) -> 
+                     (userName aUser <> "," <> getRoomUsageInfo aRecord) : go xs mixInfos
 
-dayBookingStatusForOneRoom :: Bool -> (RoomId, Room) -> [Record] -> [Text]
-dayBookingStatusForOneRoom bNeedFilter (theRoomId, roomInfo) records =
+-- preEscapedToMarkup
+
+dayBookingStatusForOneRoom :: Bool -> (RoomId, Room) -> [Record] -> Handler [[Text]]
+dayBookingStatusForOneRoom bNeedFilter (theRoomId, roomInfo) records = do
     -- kickout already Cancel Records 
     let finalRecords = bNeedFilter ? 
                           ((filter (\r -> recordRoomId r == theRoomId && 
-                                         recordCancel r == False) records), records)        
-    in [roomNumber roomInfo] ++ (dayBookingStatusForOneRoom' finalRecords)
+                                         recordCancel r == False) records), records)
+    users <- mapM (runDB . get404 . recordUserId) finalRecords
+    let mixInfos = zip finalRecords users
+    return [[roomNumber roomInfo] ++ (dayBookingStatusForOneRoom' mixInfos)]
 
 -- no records in that day, return all room's or jsut one room.
 getAllAvailableOfTheDay :: [Record] -> Maybe (RoomId) -> Handler Value
@@ -80,18 +85,20 @@ getAllAvailableOfTheDay records maybeRoomId = do
     case maybeRoomId of
         Just theRoomId -> do
             roomInfo <- runDB $ get404 theRoomId
-            return . toJsonRet $ [dayBookingStatusForOneRoom True (theRoomId, roomInfo) records]
+            toJsonRet <$> (dayBookingStatusForOneRoom True (theRoomId, roomInfo) records)
         -- list all rooms in that day.
         Nothing -> do
             entityRooms <- runDB $ listRoomProfile
             let rooms = map (\(Entity theRoomId roomInfo) -> (theRoomId, roomInfo)) entityRooms
-            return . toJsonRet $ map (flip (dayBookingStatusForOneRoom True) records) rooms
+            toJsonRet <$> (mapM go rooms)
+    where
+    go roomWithId =  concat <$> (dayBookingStatusForOneRoom True roomWithId records)
 
-getRecordByHour :: Int -> [Record] -> Maybe Record
+getRecordByHour :: Int -> [(Record, User)] -> Maybe (Record, User)
 getRecordByHour _        []     = Nothing
 getRecordByHour timeHour (x:xs) = 
-    let start = todHour . recordStartTime $ x
-        end   = todHour . recordEndTime $ x
+    let start = todHour . recordStartTime . fst $ x
+        end   = todHour . recordEndTime . fst $ x
      in if timeHour `elem` [start..(end-1)]
            then Just x
            else getRecordByHour timeHour xs
