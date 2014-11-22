@@ -50,12 +50,14 @@ toLevelString lev
 
 toRoomUsageString :: RoomUsage -> T.Text
 toRoomUsageString use 
-    | use == UsageZuHui        = "组会"
-    | use == UsageXueShuBaoGao = "学术报告"
-    | use == UsageXueShuHuiYi  = "学术会议"
-    | use == UsageYanTaoHui    = "研讨会" 
-    | use == UsageOther        = "期他" 
-    | otherwise                = "无标明" 
+    | use == UsageZuHui            = "组会"
+    | use == UsageXueShuBaoGao     = "学术报告"
+    | use == UsageYanTaoHui        = "研讨会" 
+    | use == UsageXueShengHuoDong  = "学生活动" 
+    | use == UsageJiaoXueKeCheng   = "教学课程"
+    | use == UsageDangHui          = "党会"
+    | use == UsageOther            = "其他" 
+    | otherwise                    = "无标明" 
 
 getRoomUsageInfo :: Record -> T.Text
 getRoomUsageInfo bookingInfo = 

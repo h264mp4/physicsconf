@@ -96,12 +96,3 @@ getRecordByHour timeHour (x:xs) =
      in if timeHour `elem` [start..(end-1)]
            then Just x
            else getRecordByHour timeHour xs
-
--- not used right now
-getHoursInUsing :: [Record] -> [Int]
-getHoursInUsing []     = []
-getHoursInUsing (x:xs) =
-    let start = todHour . recordStartTime $ x
-        end   = todHour . recordEndTime $ x
-     in [start .. (end - 1)] ++ getHoursInUsing xs
-

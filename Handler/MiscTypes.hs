@@ -12,8 +12,9 @@ data Level = AuthNormal | AuthAdvance | AuthAdmin
     deriving (Show, Read, Eq, Ord)
 derivePersistField "Level"
 
-data RoomUsage = UsageZuHui     | UsageXueShuBaoGao | UsageXueShuHuiYi | 
-                 UsageYanTaoHui | UsageOther
+data RoomUsage = UsageZuHui     | UsageXueShuBaoGao | 
+                 UsageYanTaoHui | UsageXueShengHuoDong | UsageJiaoXueKeCheng |
+                 UsageDangHui   | UsageOther
     deriving (Show, Read, Eq, Ord)
 derivePersistField "RoomUsage"
 

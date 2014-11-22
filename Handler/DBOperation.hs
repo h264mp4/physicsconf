@@ -2,6 +2,7 @@
 module Handler.DBOperation where
 
 import Network.Mail.SMTP
+import Data.List(sort)
 import Data.Maybe(fromJust)
 import Database.Persist.Class
 import Database.Persist.Types
@@ -85,12 +86,12 @@ deleteRoom = delete -- theRoomId
 bookingRoom newRecord@(Record theUserId theDay theRoomId 
                               startTime endTime curTime _ _ _) = do
     -- check whether the record exist
-    maybeExist <- getBy $ UniqueRecord theDay theRoomId startTime endTime
-    case maybeExist of 
-        Just (Entity theId theValue) -> do
-            liftIO $ print $ "It has already been booked" ++ (show theId)
+    bInUsing <- isHourInUsing newRecord
+    case bInUsing of 
+        True -> do
+            liftIO $ print $ "It has already been booked"
             return Nothing
-        Nothing -> do
+        False -> do
             --curTime <- liftIO $ getCurrentTime
             newRecordId <- insert newRecord
             maybeUser <- get theUserId
@@ -111,6 +112,26 @@ bookingRoom newRecord@(Record theUserId theDay theRoomId
                         updateRecords = existRecords ++ [newRecordId]
                     update existId [DayRecordsIds =. updateRecords]
                     return $ Just newRecordId
+
+isHourInUsing newRecord = do
+    records <- getOneRoomRecordsOfDay (recordDay newRecord) (recordRoomId newRecord)
+    let hourInUsing = sort . getHoursInUsing $ records
+    return $ (todHour . recordStartTime $ newRecord) `elem` hourInUsing
+    where
+    getHoursInUsing :: [Record] -> [Int]
+    getHoursInUsing []     = []
+    getHoursInUsing (x:xs) =
+        let start = todHour . recordStartTime $ x
+            end   = todHour . recordEndTime $ x
+         in [start .. (end - 1)] ++ getHoursInUsing xs
+
+getOneRoomRecordsOfDay theDay theRoomId = do
+    mayRids <- getRecordIdsByDay theDay
+    case mayRids of
+        Nothing -> return []
+        Just rids -> do
+            records <- mapM get404 rids
+            return $ filter (\ r -> recordRoomId r == theRoomId) records
 
 cancelABooking recordId = do
     maybeRecord <- get recordId
@@ -154,7 +175,7 @@ emailNotification aRecord aUser aRoom status = do
                               T.unpack roomText ++ " [from " ++ (show startTime) ++ " to " 
                               ++ (show endTime) ++ 
                               ", " ++ show year ++ "-" ++ show month ++ "-" ++ show day ++ "]")
-        allParts    = plainTextPart (TL.pack $ show $ getRoomUsageInfo aRecord)
+        allParts    = plainTextPart (TL.fromStrict $ getRoomUsageInfo aRecord)
         theMail     = simpleMail fromAddress toAddress ccAddress bccAddress subject [allParts]
 
     sendMailWithLogin viaHost adminUserName adminPassword theMail 

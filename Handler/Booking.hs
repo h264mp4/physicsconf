@@ -77,7 +77,7 @@ postBookingR = do
                         runFormPost $ newbookingForm theUserId theDay theRoom availableRoomPairs
           liftIO $ print result
           case result of
-              FormSuccess bookingInfo -> do
+              FormSuccess bookingInfo -> do                 
                   mayRecordId <- runDB $ bookingRoom bookingInfo
                   case mayRecordId of
                        Nothing -> defaultLayout $ do
@@ -140,9 +140,11 @@ newbookingForm theUserId theDay theRoom roomPairs = renderBootstrap3 commonSimpl
     toHourPair a b = (T.pack $ show a, TimeOfDay b 0 0)
     roomUsagePairs :: [(Text, RoomUsage)]
     roomUsagePairs = [ ("组会"   , UsageZuHui)
-                      ,("学术会议", UsageXueShuHuiYi)
                       ,("学术报告", UsageXueShuBaoGao)
                       ,("研讨会"  , UsageYanTaoHui)
+                      ,("学生活动", UsageXueShengHuoDong)
+                      ,("教学课程", UsageJiaoXueKeCheng)
+                      ,("党会"    , UsageDangHui)
                       ,("其他"    , UsageOther)
                      ]
 
