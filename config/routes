@@ -8,6 +8,9 @@
 /daybookingstatus DayBookingStatusR GET
 /booking BookingR GET POST
 
+/userbookingmanage UserBookingManageR GET
+/userprofilemanage UserProfileManageR GET
+
 /addroom AddRoomR GET POST
 /listroom ListRoomR GET
 /editroom EditRoomR GET

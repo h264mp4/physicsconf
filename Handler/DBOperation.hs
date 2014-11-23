@@ -73,9 +73,16 @@ updateRoomProfile theRoomId newInfo = do
                      ]
     return "OK"
 
-listRoomProfile = do
+listRoomProfile bAvailable bValid = do
     rooms <- selectList [] [Asc RoomId]
-    return (rooms :: [Entity Room])
+    curDT <- liftIO $ getCurDayAndTime
+    let curDay = localDay curDT
+        availableRooms = if bAvailable
+                            then filter (\ (Entity _ r) -> roomAvailable r == True) rooms
+                            else rooms
+    case bValid of
+        True  ->  return $ filter (\(Entity _ r) -> roomValidTime r >= curDay) availableRooms
+        False ->  return (availableRooms :: [Entity Room])
 
 deleteRoom = delete -- theRoomId
 

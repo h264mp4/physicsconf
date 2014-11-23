@@ -1,0 +1,55 @@
+<br>
+<div class="row" id="usermenuOfBookingManage">
+    <div class="col-md-2" id="left-nav">
+        <div class="row" id="hello-section">
+            <div class="col-md-12">
+                ^{userMenuWidget maybeUserInfo}
+                            
+    <!-- the main content -->
+    <div class="col-md-10" id="recordsOfUser">       
+        <div class="row">
+            <div class="col-md-12">
+                <h4> 当前预定记录
+                <div class="table-responsive">
+                    <table id="#{currentBookingTable}" class="table .table-hover .table-striped"> 
+                      <thead>
+                        <th> 使用者
+                        <th> 会议室编号
+                        <th> 日期
+                        <th> 时间
+                        <th> 用途
+                        <th> <!-- edit for cancel booking -->
+                      <tbody>
+                        $forall RepRecord uname roomname day time usage _ recordId <- curRecords
+                          <tr>
+                            <td>#{uname}
+                            <td>#{roomname}
+                            <td>#{day}
+                            <td>#{time}
+                            <td>#{usage}
+                            <td>
+                              <input type=button value="取消预订" class="btn btn-primary #{cancelBookingClass}" id="#{recordId}">                               
+        <div>
+            <br> <!-- separator -->
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4> 历史预定记录
+                <div class="table-responsive">
+                    <table id="#{currentBookingTable}" class="table .table-hover .table-striped"> 
+                      <thead>
+                        <th> 使用者
+                        <th> 会议室编号
+                        <th> 日期
+                        <th> 时间
+                        <th> 用途
+                        <th> 
+                      <tbody>
+                        $forall RepRecord uname roomname day time usage status _ <- curRecords
+                          <tr>
+                            <td> #{uname}
+                            <td> #{roomname}
+                            <td> #{day}
+                            <td> #{time}
+                            <td> #{usage}
+                            <td> #{status} <!-- 预定取消 -->

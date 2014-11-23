@@ -59,7 +59,7 @@ postAddRoomR = do
 
 getListRoomR :: Handler Value
 getListRoomR = do
-    rooms <- runDB $ listRoomProfile
+    rooms <- runDB $ listRoomProfile False False -- not matter available or valid in time
     if null rooms
        then return $ object $ []
        else do

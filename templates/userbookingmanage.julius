@@ -1,0 +1,13 @@
+$(document).ready(function() {
+
+    $(".#{rawJS cancelBookingClass}").click(function (){ 
+        var recordId = $(this).attr('id');
+        
+    });
+
+   // $('.classname').attr('id');
+
+
+
+
+});

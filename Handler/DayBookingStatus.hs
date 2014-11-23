@@ -82,7 +82,7 @@ getAllAvailableOfTheDay records maybeRoomId = do
             toJsonRet <$> (dayBookingStatusForOneRoom True (theRoomId, roomInfo) records)
         -- list all rooms in that day.
         Nothing -> do
-            entityRooms <- runDB $ listRoomProfile
+            entityRooms <- runDB $ listRoomProfile True True  -- available and valid in time 
             let rooms = map (\(Entity theRoomId roomInfo) -> (theRoomId, roomInfo)) entityRooms
             toJsonRet <$> (mapM go rooms)
     where

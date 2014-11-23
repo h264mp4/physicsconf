@@ -36,7 +36,7 @@ getBookingR = do
       Nothing -> redirect (AuthR LoginR)
       Just theEmail -> do
           (Entity theUserId theUser) <- runDB $ getBy404 $ UniqueEmail theEmail
-          roomEntities <- runDB $ listRoomProfile
+          roomEntities <- runDB $ listRoomProfile True True
           mayDay <- lookupGetParam "selectDay"          
           mayRoomId <- lookupGetParam "selectRoom"
           let theLevel = userLevel theUser
@@ -65,7 +65,7 @@ postBookingR = do
       Nothing -> redirect (AuthR LoginR)
       Just theEmail -> do
           (Entity theUserId theUser) <- runDB $ getBy404 $ UniqueEmail theEmail
-          roomEntities <- runDB $ listRoomProfile
+          roomEntities <- runDB $ listRoomProfile True True
           mayDay <- lookupGetParam "selectDay"          
           mayRoomId <- lookupGetParam "selectRoom"
           let theLevel = userLevel theUser

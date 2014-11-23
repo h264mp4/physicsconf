@@ -28,8 +28,42 @@ listinfoWidget :: (Route App) -> (Route App) -> (Route App) -> Text -> Text -> W
 listinfoWidget listLink editLink deleteLink dataType aRandomId = $(widgetFile "listinfo")
     
 
+userMenuWidget :: Maybe User -> Widget
+userMenuWidget mybeUserInfo = toWidget [hamlet|
+    $maybe userInfo <- mayUserInfo
+        <div class="row" id="separator">
+            <pre> 
+                <h4>你好, <b>#{userName userInfo}</b>
+            <a href=@{AuthR LogoutR}> 
+                <h6 align="left"> 注销
+        <div class="row">
+             <hr>                          
 
+        <div class="row" id="functionalities">
+            <ul class="nav nav-pills nav-stacked">
+                <li> 
+                    <a href="@{HomeR}">首页
+                <li> 
+                    <a href="@{UserBookingManageR}">我的预订管理
+                <li> 
+                    <a href="@{UserProfileManageR}">个人信息设置
 
+        <div class="row">
+             <hr width="90%">                          
+
+    $nothing 
+        <div class="row" id="separator">
+            <pre>
+                <h4>请<a href=@{AuthR LoginR}>登入</a>进行预定
+                
+
+    <div class="row" id="intros">
+        <ul class="nav nav-pills nav-stacked">
+            <li> 
+                <a href="##">会议室预订介绍
+            <li> 
+                <a href="##">其他介绍
+|]
 
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------

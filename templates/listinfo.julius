@@ -91,7 +91,7 @@ $(document).ready(function() {
                     //console.log("DeleteButton" + i + ". Key" + key + ", value" + val);
          
                     $("#"+key).attr({"btnid":key, "dbid":val});
-                    $("#"+key).click(function (){                        
+                    $("#"+key).click(function (){ 
                         var bDelete = confirm("将永久的删除此条目");
                         if (bDelete) {
                             var jData = JSON.stringify({"deleteId" : $(this).attr("dbid")});
