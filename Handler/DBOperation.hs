@@ -151,8 +151,8 @@ cancelABooking recordId = do
 -- | Email Operations: sending booking/cancel emails
 emailNotification :: Record -> User -> Room -> BookingStatus -> IO ()
 emailNotification aRecord aUser aRoom status = do
-    let adminUserName = "testConfroom" -- 163 username and passphrase
-        adminPassword = "testConfroom123"
+    let adminUserName = "pekingphyconfadmin" -- 163 username and passphrase
+        adminPassword = "asdfgh"
         viaHost       = "smtp.163.com"
         viaPort       = 25
 
@@ -174,8 +174,10 @@ emailNotification aRecord aUser aRoom status = do
         subject     = T.pack (statusText !! 0 ++ ": " ++ "Conference Room " ++ 
                               T.unpack roomText ++ " [from " ++ (show startTime) ++ " to " 
                               ++ (show endTime) ++ 
-                              ", " ++ show year ++ "-" ++ show month ++ "-" ++ show day ++ "]")
-        allParts    = plainTextPart (TL.fromStrict $ getRoomUsageInfo aRecord)
+                              ", " ++ show year ++ "-" ++ show month ++ "-" ++ show day ++ "]" 
+                              )
+        allParts    = plainTextPart (("Don't Reply This Email.\nRoom Usage: ") <> 
+                                      (TL.fromStrict $ getRoomUsageInfo aRecord))
         theMail     = simpleMail fromAddress toAddress ccAddress bccAddress subject [allParts]
 
     sendMailWithLogin viaHost adminUserName adminPassword theMail 

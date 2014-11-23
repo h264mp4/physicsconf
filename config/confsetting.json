@@ -1,0 +1,11 @@
+{
+    "confsettings":
+    {
+          {"defaultadmin"  :  "confadmin"}
+        , {"adminpw"       :  "physicsconf"}
+        , {"email"         :  "pekingphyconfadmin"}
+        , {"emailpw"       :  "asdfgh"}
+        , {"emailhost"     :  "smtp.163.com"}
+        , {"emailhostport" :  25}
+    }
+}

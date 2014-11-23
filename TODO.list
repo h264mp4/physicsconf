@@ -1,0 +1,6 @@
+2014-11-23
+
+1. User History, User Cancel Booking.
+2. Room Deadline Day : we need not list rooms if it is not valid in Day.
+   Room Available: if room is not available, should not be listed.
+3. Introduction

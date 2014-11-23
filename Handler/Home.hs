@@ -14,16 +14,17 @@ import Text.Julius(rawJS)
    
 getHomeR :: Handler Html
 getHomeR = do
-    req <- waiRequest
-    req' <- getRequest
-    liftIO $ print req
-    liftIO $ print "Get request body json"
-    !res <- runRequestBody
-    liftIO $ print $ fst res
-    liftIO $ print $ reqLangs req'
-
-    ss <- getSession
-    liftIO $ print ss
+    -- req <- waiRequest
+    -- req' <- getRequest
+    -- liftIO $ print req
+    -- liftIO $ print "Get request body json"
+    --  
+    -- !res <- runRequestBody
+    -- liftIO $ print $ fst res
+    -- liftIO $ print $ reqLangs req'
+    --  
+    -- ss <- getSession
+    -- liftIO $ print ss
 
     -- curDay will be passed to Julius, 
     -- to limit the day selection range to 2 month.

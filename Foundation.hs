@@ -23,6 +23,9 @@ import Data.Time
 import Data.Text(Text)
 import System.Locale
 
+
+import Handler.MiscTypes
+
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
 -- starts running, such as database connections. Every handler will have
@@ -191,11 +194,15 @@ authConf = AuthPlugin "authConf" dispatch login
     dispatch "POST" ["login"] = do
         emailName <- lift $ runInputPost $ ireq textField "邮箱"
         pw <- lift $ runInputPost $ ireq textField "密码"
-        mayName <- lift $ runDB $ verifyUserWithPassword emailName pw
-        case mayName of
+        mayUser <- lift $ runDB $ verifyUserWithPassword emailName pw
+        case mayUser of
             Nothing -> lift $ redirect (AuthR reloadR)  
-            Just theName -> do                                
-                lift $ setCredsRedirect $ Creds "email" emailName [(emailName, theName)]
+            Just aUser -> do                                
+                lift $ setCreds False $ Creds "email" emailName [(emailName, userName aUser)]
+                if userLevel aUser == AuthAdmin
+                   then lift $ redirect ManageR
+                   else lift $ redirect HomeR
+                
     dispatch "GET" ["reload"] = getReloadR >>= sendResponse
     dispatch _ _ = notFound
 
@@ -230,7 +237,7 @@ verifyUserWithPassword theEmail thePassword = do
         Nothing -> liftIO $ print "invalid username" >> return Nothing
         Just aUser -> do
             if userPassword aUser == thePassword
-               then return . Just . userName $ aUser
+               then return . Just $ aUser
                else do
                     liftIO $ print $ "invalid password for " ++ (show $ userName aUser)
                     return Nothing

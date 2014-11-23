@@ -2,43 +2,67 @@
 module Handler.Manage where
 
 import Import
+import Yesod.Auth
+
+import Handler.DBOperation
 import CommonWidget
 
 ------------------------------------------------------------------------------------------
 ---- Admin Manage Page
 getManageR :: Handler Html
-getManageR = defaultLayout $ do
+getManageR =  do 
+    maid <- maybeAuthId
+    -- the following code are not used.
+    mayUserInfo <- do
+        case maid of 
+            Nothing -> return Nothing
+            Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail
+
     let addLink = AddRoomR 
         listLink = ListRoomR 
         editLink = EditRoomR 
         deleteLink = DeleteRoomR 
         dataType = ("typeroom"::Text) 
         buttonName = ("新建会议室":: Text) 
-    aRandonId <- newIdent
-    aRandomTableId <- newIdent
-    toWidget $(widgetFile "manage")
+    defaultLayout $ do
+        aRandomTableId <- newIdent
+        toWidget $(widgetFile "manage")
 
 getManageUserR :: Handler Html
-getManageUserR = defaultLayout $ do
+getManageUserR = do
+    maid <- maybeAuthId
+    -- the following code are not used.
+    mayUserInfo <- do
+        case maid of 
+            Nothing -> return Nothing
+            Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail
+
     let addLink = AddUserR 
         listLink = ListUserR
         editLink = EditUserR 
         deleteLink = DeleteUserR 
         dataType = ("typeuser"::Text) 
         buttonName = ("新建用户":: Text) 
-    aRandonId <- newIdent
-    aRandomTableId <- newIdent
-    $(widgetFile "manage")
+    defaultLayout $ do
+        aRandomTableId <- newIdent
+        $(widgetFile "manage")
 
 -- listLink editLink deleteLink
 getManageRoomR :: Handler Html
-getManageRoomR = defaultLayout $ do
+getManageRoomR = do
+    maid <- maybeAuthId
+    -- the following code are not used.
+    mayUserInfo <- do
+        case maid of 
+            Nothing -> return Nothing
+            Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail
+
     let addLink = AddRoomR 
         listLink = ListRoomR
         editLink = EditRoomR 
         deleteLink = DeleteRoomR 
         dataType = ("typeroom"::Text) 
         buttonName = ("新建会议室":: Text) 
-    aRandonId <- newIdent
-    aRandomTableId <- newIdent
-    $(widgetFile "manage")
+    defaultLayout $ do
+        aRandomTableId <- newIdent
+        $(widgetFile "manage")
