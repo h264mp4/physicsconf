@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     $(".#{rawJS cancelBookingClass}").click(function (){ 
         var recordId = $(this).attr('id');
-        
+        console.log("we clicked: " + recordId);        
     });
 
    // $('.classname').attr('id');

@@ -29,6 +29,7 @@ library
                      Handler.User
                      Handler.Manage
                      Handler.Booking
+                     Handler.UserBookingManage
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

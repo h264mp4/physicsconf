@@ -7,6 +7,7 @@ import Data.Maybe(fromJust)
 import Database.Persist.Class
 import Database.Persist.Types
 import Control.Concurrent(forkIO)
+import Database.Persist.Sql
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
 
@@ -230,10 +231,13 @@ getUserBookingInfosByUserEmail theEmail bHistory = do
     curDT <- liftIO $ getCurDayAndTime
     let curDay = localDay curDT
         curTime = localTimeOfDay curDT
-        selectOperation = if bHistory then (<=.) else (>=.)
+        selectOperation = bHistory ? ( (<=.),  (>=.) )
 
-    maybeValue <- getBy $ UniqueEmail theEmail
-    case maybeValue of
+    liftIO $ print "theEmail : "
+    liftIO $ print theEmail
+    maybeUserValue <- getBy $ UniqueEmail theEmail
+    liftIO $ print maybeUserValue
+    case maybeUserValue of
         Nothing -> do
                    liftIO $ print "invlaid key, no corresponding value."
                    return []
@@ -243,14 +247,37 @@ getUserBookingInfosByUserEmail theEmail bHistory = do
                                                  (theDayRecordsEntityList)
             theRecordsList <- selectList [RecordId <-. theRecordsKeyList] []
             let matchRecordsList = filter (\ (Entity _ r) -> recordUserId r == theUserId) 
-                                          theRecordsList
-            mapM marshalOneRecordToTypeValues matchRecordsList
+                                                                               theRecordsList
+            mapM marshalOneRecordToRep matchRecordsList
     where
     getRecordIdsFromDayRecordsEntity (Entity _ aDayRecords) = dayRecordsIds aDayRecords
 
----- TODO: refactor this function
-marshalOneRecordToTypeValues (Entity aRecordId aRecord) = do
+marshalOneRecordToRep (Entity aRid aRecord) = do
     maybeUser <- get (recordUserId aRecord)
     maybeRoom <- get (recordRoomId aRecord)
-    return (aRecordId, aRecord, fromJust maybeUser, fromJust maybeRoom)
- 
+    return $ RepRecord {
+                  userNameRep = userName . fromJust $ maybeUser
+                , roomName    = roomNumber . fromJust $ maybeRoom
+                , bookingDay  = T.pack . show . recordDay $ aRecord
+                , occupyTime  = (T.pack . show . todHour . recordStartTime $ aRecord) <> "--"  <>
+                                (T.pack . show . todHour . recordEndTime $ aRecord)
+                , bookingUsage    = getRoomUsageInfo aRecord
+                , bookingStatus   = getStatus . recordCancel $ aRecord
+                , bookingRecordId = T.pack . show . fromSqlKey $ aRid
+             }
+                       
+     where 
+     getStatus True  = "取消预定"
+     getStatus False = ""
+
+-- for user booking status representation in: getUserBookingManageR
+data RepRecord = RepRecord {
+      userNameRep     :: Text
+     ,roomName        :: Text
+     ,bookingDay      :: Text
+     ,occupyTime      :: Text -- start to end
+     ,bookingUsage    :: Text
+     ,bookingStatus   :: Text -- whether canceld
+     ,bookingRecordId :: Text -- T.pack . show . fromSqlKey $ recordId 
+
+     } deriving (Show)

@@ -117,7 +117,6 @@ instance Yesod App where
     -- Routes not requiring authenitcation.
     isAuthorized (AuthR _) _ = return Authorized
     isAuthorized FaviconR _ = return Authorized
-    isAuthorized RobotsR _ = return Authorized
     isAuthorized HomeR _ = return Authorized
     isAuthorized DayBookingStatusR _ = return Authorized
                                   
@@ -218,7 +217,7 @@ getReloadR =  lift $ defaultLayout $ do
     |]
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
--- other helpers, may not be used
+-- other helpers
 getUserIdByUniqueUserEmail theEmail = do
     maybeUser <- getBy $ UniqueEmail theEmail
     case maybeUser of

@@ -18,12 +18,19 @@ getManageR =  do
             Nothing -> return Nothing
             Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail
 
-    let addLink = AddRoomR 
-        listLink = ListRoomR 
-        editLink = EditRoomR 
-        deleteLink = DeleteRoomR 
-        dataType = ("typeroom"::Text) 
-        buttonName = ("新建会议室":: Text) 
+    --let addLink = AddRoomR 
+    --    listLink = ListRoomR 
+    --    editLink = EditRoomR 
+    --    deleteLink = DeleteRoomR 
+    --    dataType = ("typeroom"::Text) 
+    --    buttonName = ("新建会议室":: Text) 
+    let addLink = AddUserR 
+        listLink = ListUserR
+        editLink = EditUserR 
+        deleteLink = DeleteUserR 
+        dataType = ("typeuser"::Text) 
+        buttonName = ("新建用户":: Text) 
+
     defaultLayout $ do
         aRandomTableId <- newIdent
         toWidget $(widgetFile "manage")

@@ -2,15 +2,17 @@
 module Handler.Home where
 
 import Import
-import Handler.DBOperation
-import Handler.MiscTypes
-import Handler.Utils
 import Text.Julius(rawJS)
 
 import Data.Maybe(fromJust)
 import Data.Aeson(object, (.=))
 import Yesod.Auth
 import Text.Julius(rawJS)
+
+import Handler.DBOperation
+import Handler.MiscTypes
+import Handler.Utils
+import CommonWidget
    
 getHomeR :: Handler Html
 getHomeR = do
@@ -33,7 +35,7 @@ getHomeR = do
         curTime = localTimeOfDay curDT
         curDayStr = show curDay
     maid <- maybeAuthId
-    mayUserInfo <- do
+    maybeUserInfo <- do
         case maid of 
             Nothing -> return Nothing
             Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail

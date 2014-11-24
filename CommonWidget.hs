@@ -2,13 +2,12 @@
 module CommonWidget where
 
 import Import
+import Yesod.Auth
 import Yesod.Form.Jquery
 import Yesod.Form.Bootstrap3 
 
 import Text.Julius(rawJS)
 import qualified Data.Text as T
-
-import Handler.Utils
 
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
@@ -29,8 +28,8 @@ listinfoWidget listLink editLink deleteLink dataType aRandomId = $(widgetFile "l
     
 
 userMenuWidget :: Maybe User -> Widget
-userMenuWidget mybeUserInfo = toWidget [hamlet|
-    $maybe userInfo <- mayUserInfo
+userMenuWidget maybeUserInfo = toWidget [hamlet|
+    $maybe userInfo <- maybeUserInfo
         <div class="row" id="separator">
             <pre> 
                 <h4>你好, <b>#{userName userInfo}</b>
@@ -46,7 +45,7 @@ userMenuWidget mybeUserInfo = toWidget [hamlet|
                 <li> 
                     <a href="@{UserBookingManageR}">我的预订管理
                 <li> 
-                    <a href="@{UserProfileManageR}">个人信息设置
+                    <a href="##">个人信息设置
 
         <div class="row">
              <hr width="90%">                          
@@ -64,6 +63,8 @@ userMenuWidget mybeUserInfo = toWidget [hamlet|
             <li> 
                 <a href="##">其他介绍
 |]
+
+-- @{UserProfileManageR}
 
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
