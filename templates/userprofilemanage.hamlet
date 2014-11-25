@@ -1,0 +1,12 @@
+<br>
+<div class="row" id="usermenuOfProfile">
+    <div class="col-md-2" id="left-nav">
+        <div class="row" id="hello-section">
+            <div class="col-md-12">
+                ^{userMenuWidget maybeUserInfo}
+                            
+    <!-- the main content -->
+    <div class="col-md-10" id="userProfileEdit">       
+        <div class="row">
+            <div class="col-md-11 col-md-offset-1">
+               ^{userProfileForm}

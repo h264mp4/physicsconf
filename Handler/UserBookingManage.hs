@@ -27,14 +27,13 @@ getUserBookingManageR = do
     case maid of 
         Nothing -> redirect (AuthR LoginR)
         Just theEmail -> do
-            maybeUserInfo <- runDB $ getUserInfoByUniqueUserEmail theEmail 
-            curRecords <- runDB $ getUserBookingInfosByUserEmail theEmail False
-            historyRecords <- runDB $ getUserBookingInfosByUserEmail theEmail True
-            defaultLayout $ do
-                currentBookingTable <- newIdent
-                historyBookingTable <- newIdent
-                cancelBookingClass  <- newIdent
-                toWidget $(widgetFile "userbookingmanage")
+            maybeUserInfo <- runDB $ getBy $ UniqueEmail theEmail
+            case maybeUserInfo of
+                Nothing -> redirect (AuthR LoginR)
+                Just (Entity theUserId aUser) -> do
+                    let maybeUser = Just aUser
+                    defaultLayout $ do
+                        toWidget $(widgetFile "userbookingmanage")
 
 
 deleteCancelBookingR :: Handler Value

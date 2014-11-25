@@ -1,6 +1,6 @@
 <br>
 <div class="row" id="manageDiv">
-    $maybe userInfo <- mayUserInfo
+    $maybe userInfo <- maybeUser
       $if (userLevel userInfo) /= AuthAdmin
           <div>
               <h4> 无法登入，您必须是管理员
@@ -16,6 +16,7 @@
                               <a href=@{ManageRoomR}>会议室管理
                           <li> 
                               <a href=@{ManageUserR}>用户管理
+
           <div class="col-md-9">
               ^{listinfoWidget listLink editLink deleteLink dataType buttonName}
               <input type=button value=#{buttonName} class="btn btn-primary" onClick="location.href='@{addLink}'">

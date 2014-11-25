@@ -1,10 +1,29 @@
 2014-11-23
 
-1. User History, User Cancel Booking.
-2. Room Deadline Day : we need not list rooms if it is not valid in Day.
+1. User History, User Cancel Booking.    -- It is ok
+2. Room Deadline Day : we need not list rooms if it is not valid in Day.  -- It is Ok.
    Room Available: if room is not available, should not be listed.      ---- Is is OK.
-3. Introduction.                
+3. Introduction
 
-2014-11-24 : 
+2014-11-25 : 
+1. Admin can list all rooms booking by user
+   So we should pass userid as the parameters!
 
 
+
+
+
+
+----------------------
+Conclusion:
+
+1. Should First Do Big Picture Template:
+   For Instance:
+     Normal User -> default layout (with left nav menu)
+     Admin  user -> default layout (with a defferent nav menu)
+  these big one can avoid a lot of code.
+
+2. make more common widget, and make every part as modular as possible.
+   
+3. make reusable means make MORE mudolau WIDGET!
+   For example : list user booking records, we can make it a widget.

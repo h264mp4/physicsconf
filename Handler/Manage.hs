@@ -12,11 +12,10 @@ import CommonWidget
 ---- Admin Manage Page
 getManageR :: Handler Html
 getManageR =  do 
-    maid <- maybeAuthId
-    mayUserInfo <- do
-        case maid of 
-            Nothing -> return Nothing
-            Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail
+    maybeUserInfo <- doAuthAndGetUserInfo
+    let maybeUser = case maybeUserInfo of
+                        Nothing -> Nothing
+                        Just (Entity _ aUser) -> Just aUser
 
     let addLink = AddRoomR 
         listLink = ListRoomR 
@@ -31,12 +30,10 @@ getManageR =  do
 
 getManageUserR :: Handler Html
 getManageUserR = do
-    maid <- maybeAuthId
-    -- the following code are not used.
-    mayUserInfo <- do
-        case maid of 
-            Nothing -> return Nothing
-            Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail
+    maybeUserInfo <- doAuthAndGetUserInfo
+    let maybeUser = case maybeUserInfo of
+                        Nothing -> Nothing
+                        Just (Entity _ aUser) -> Just aUser
 
     let addLink = AddUserR 
         listLink = ListUserR
@@ -51,12 +48,10 @@ getManageUserR = do
 -- listLink editLink deleteLink
 getManageRoomR :: Handler Html
 getManageRoomR = do
-    maid <- maybeAuthId
-    -- the following code are not used.
-    mayUserInfo <- do
-        case maid of 
-            Nothing -> return Nothing
-            Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail
+    maybeUserInfo <- doAuthAndGetUserInfo
+    let maybeUser = case maybeUserInfo of
+                        Nothing -> Nothing
+                        Just (Entity _ aUser) -> Just aUser
 
     let addLink = AddRoomR 
         listLink = ListRoomR

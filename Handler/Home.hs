@@ -34,12 +34,11 @@ getHomeR = do
     let curDay = localDay curDT
         curTime = localTimeOfDay curDT
         curDayStr = show curDay
-    maid <- maybeAuthId
-    maybeUserInfo <- do
-        case maid of 
-            Nothing -> return Nothing
-            Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail
-        
+
+    maybeUserInfo <- doAuthAndGetUserInfo
+    let maybeUser = case maybeUserInfo of
+                        Nothing -> Nothing
+                        Just (Entity _ aUser) -> Just aUser
     defaultLayout $ do
         newbookingId <- newIdent
         $(widgetFile "homepage")

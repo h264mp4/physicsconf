@@ -227,28 +227,31 @@ getOnePieceInfoByDBId theId = do
 
 -- lookup a user's booking info: little complex, return a list of [(recordId, Record, User, Room)]
 -- uniqueKey could be [roomId or userId]
+
+getUserBookingInfosByUserId theUserId bHistory = do
+    getOneUserBookingInfos theUserId bHistory    
+
 getUserBookingInfosByUserEmail theEmail bHistory = do
+    maybeUser <- getBy $ UniqueEmail theEmail
+    case maybeUser of
+        Nothing -> do
+                   liftIO $ print "invlaid key, no corresponding value."
+                   return []
+        Just (Entity theUserId _) -> getOneUserBookingInfos theUserId bHistory    
+
+getOneUserBookingInfos theUserId bHistory = do
     curDT <- liftIO $ getCurDayAndTime
     let curDay = localDay curDT
         curTime = localTimeOfDay curDT
         selectOperation = bHistory ? ( (<.),  (>=.) )
 
-    liftIO $ print "theEmail : "
-    liftIO $ print theEmail
-    maybeUserValue <- getBy $ UniqueEmail theEmail
-    liftIO $ print maybeUserValue
-    case maybeUserValue of
-        Nothing -> do
-                   liftIO $ print "invlaid key, no corresponding value."
-                   return []
-        Just (Entity theUserId _) -> do
-            theDayRecordsEntityList <- selectList [DayRecordsDay `selectOperation` curDay] []
-            let theRecordsKeyList = concat . map getRecordIdsFromDayRecordsEntity $ 
-                                                 (theDayRecordsEntityList)
-            theRecordsList <- selectList [RecordId <-. theRecordsKeyList] []
-            let matchRecordsList = filter (\ (Entity _ r) -> recordUserId r == theUserId) 
-                                                                               theRecordsList
-            mapM marshalOneRecordToRep matchRecordsList
+    theDayRecordsEntityList <- selectList [DayRecordsDay `selectOperation` curDay] []
+    let theRecordsKeyList = concat . map getRecordIdsFromDayRecordsEntity $ 
+                                         (theDayRecordsEntityList)
+    theRecordsList <- selectList [RecordId <-. theRecordsKeyList] []
+    let matchRecordsList = filter (\ (Entity _ r) -> recordUserId r == theUserId) 
+                                                                       theRecordsList
+    mapM marshalOneRecordToRep matchRecordsList
     where
     getRecordIdsFromDayRecordsEntity (Entity _ aDayRecords) = dayRecordsIds aDayRecords
 

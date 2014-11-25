@@ -7,21 +7,23 @@
 /daybookingstatus DayBookingStatusR GET
 /booking BookingR GET POST
 
-/userbookingmanage UserBookingManageR GET
--- /userprofilemanage UserProfileManageR GET
-/cancelbooking CancelBookingR DELETE
-
 /addroom AddRoomR GET POST
 /listroom ListRoomR GET
 /editroom EditRoomR GET
 /finisheditroom/#RoomId FinishEditRoomR POST
 /deleteroom DeleteRoomR DELETE
 
+-- For Admin to do user related operation
 /adduser AddUserR GET POST
 /listuser ListUserR GET
 /edituser EditUserR GET
 /finishedituser/#UserId FinishEditUserR POST
 /deleteuser DeleteUserR DELETE
+
+/userbookingmanage UserBookingManageR GET
+/cancelbooking CancelBookingR DELETE
+-- /userprofilemanage UserProfileManageR GET POST
+
     
 /manage ManageR GET
 /manage/room ManageRoomR GET

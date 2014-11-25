@@ -9,6 +9,8 @@ import Yesod.Form.Bootstrap3
 import Text.Julius(rawJS)
 import qualified Data.Text as T
 
+import Handler.DBOperation
+
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
 backNavWidget :: Text -> Text -> (Route App) -> Widget
@@ -26,10 +28,9 @@ backNavWidget slogen info theLink = toWidget [hamlet|
 listinfoWidget :: (Route App) -> (Route App) -> (Route App) -> Text -> Text -> Widget
 listinfoWidget listLink editLink deleteLink dataType aRandomId = $(widgetFile "listinfo")
     
-
 userMenuWidget :: Maybe User -> Widget
-userMenuWidget maybeUserInfo = toWidget [hamlet|
-    $maybe userInfo <- maybeUserInfo
+userMenuWidget maybeUser = toWidget [hamlet|
+    $maybe userInfo <- maybeUser
         <div class="row" id="separator">
             <pre> 
                 <h4>你好, <b>#{userName userInfo}</b>
@@ -63,6 +64,15 @@ userMenuWidget maybeUserInfo = toWidget [hamlet|
             <li> 
                 <a href="##">其他介绍
 |]
+
+listUserBookingRecordsWidget :: UserId -> Widget
+listUserBookingRecordsWidget theUserId = do
+    curRecords <- handlerToWidget $ runDB $ getUserBookingInfosByUserId theUserId False
+    historyRecords <- handlerToWidget $ runDB $ getUserBookingInfosByUserId theUserId True
+    currentBookingTable <- handlerToWidget newIdent
+    historyBookingTable <- handlerToWidget newIdent
+    cancelBookingClass  <- handlerToWidget newIdent
+    $(widgetFile "listuserbooking")
 
 -- @{UserProfileManageR}
 
@@ -117,3 +127,5 @@ $(function(){
     readMay s = case reads s of
                 (x, _):_ -> Just x
                 [] -> Nothing
+
+--------------------------------------------------------------------------------

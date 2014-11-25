@@ -218,23 +218,19 @@ getReloadR =  lift $ defaultLayout $ do
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
 -- other helpers
-getUserIdByUniqueUserEmail theEmail = do
-    maybeUser <- getBy $ UniqueEmail theEmail
-    case maybeUser of
-        Nothing -> return Nothing
-        Just (Entity theId auser) -> return $ Just theId
-
-getUserInfoByUniqueUserEmail theEmail = do
-    maybeUser <- getBy $ UniqueEmail theEmail
-    case maybeUser of
-        Nothing -> return Nothing
-        Just (Entity _ aUser) -> return $ Just aUser
+doAuthAndGetUserInfo = do
+    maid <- maybeAuthId
+    maybeUserInfo <- do
+        case maid of 
+            Nothing -> return Nothing
+            Just theEmail -> runDB $ getBy $ UniqueEmail theEmail
+    return maybeUserInfo
 
 verifyUserWithPassword theEmail thePassword = do
-    mayInfo <- getUserInfoByUniqueUserEmail theEmail
+    mayInfo <- getBy $ UniqueEmail theEmail 
     case mayInfo of
         Nothing -> liftIO $ print "invalid username" >> return Nothing
-        Just aUser -> do
+        Just (Entity _ aUser) -> do
             if userPassword aUser == thePassword
                then return . Just $ aUser
                else do

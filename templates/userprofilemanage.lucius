@@ -1,0 +1,11 @@
+#left-nav {
+    border-right: 2px solid #E8E8E8;
+}
+
+#functionalities > ul > li {
+    font-size: 1.2em;
+}
+
+#intros > ul > li {
+    font-size: 1.2em;
+}
