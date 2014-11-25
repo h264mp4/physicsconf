@@ -9,8 +9,8 @@
     <div class="col-md-10" id="userProfileEdit">       
         <div class="row">
             <div class="col-md-11 col-md-offset-1">
-               <h4> 编辑用户: #{uname}
+               <h4> 编辑用户: #{uname},
+               <h6> 创建时间: #{createdTime}
                <form class="form-horizontal control-label" method=post action=@{UserProfileManageR} enctype=#{formEnctype}>
-                   ^{userProfileForm}
-                   <p> 创建时间: #{createdTime}
+                   ^{userProfileForm}                   
                    <input class="btn btn-primary" type="submit" value="保存">

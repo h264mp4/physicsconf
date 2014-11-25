@@ -9,10 +9,9 @@
 1. Admin can list all rooms booking by user
    So we should pass userid as the parameters!
 
+2. User Profile Manage: change password, change name.
 
-
-
-
+3. Send random password to user's email
 
 ----------------------
 Conclusion:
