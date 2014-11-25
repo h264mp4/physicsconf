@@ -22,7 +22,7 @@
 
 /userbookingmanage UserBookingManageR GET
 /cancelbooking CancelBookingR DELETE
--- /userprofilemanage UserProfileManageR GET POST
+/userprofilemanage UserProfileManageR GET POST
 
     
 /manage ManageR GET

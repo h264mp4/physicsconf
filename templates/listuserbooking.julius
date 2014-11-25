@@ -1,0 +1,27 @@
+$(document).ready(function() {
+
+    $(".#{rawJS cancelBookingClass}").click(function (){ 
+        var recordId = $(this).attr('id');
+        console.log("we clicked: " + recordId);
+
+        var bCancel = confirm("您将取消本预定");
+        if (bCancel) {
+            var jData = JSON.stringify({"cancelId" : recordId});
+            $.ajax({
+                processData: false,
+                type: "DELETE",
+                url: "@{CancelBookingR}",
+                data: jData,
+                dataType: "json",
+                success: function(data) {
+                    if (data["ret"] !== "ok") {
+                        alert("内部错误，预定无法取消");
+                    } else {
+                        console.log("Ok, it is cancelled.");
+                    }
+                    window.location.reload();
+                }
+            });
+        }
+    });
+});

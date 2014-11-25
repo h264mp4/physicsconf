@@ -46,7 +46,7 @@ userMenuWidget maybeUser = toWidget [hamlet|
                 <li> 
                     <a href="@{UserBookingManageR}">我的预订管理
                 <li> 
-                    <a href="##">个人信息设置
+                    <a href="@{UserProfileManageR}">个人信息设置
 
         <div class="row">
              <hr width="90%">                          

@@ -62,3 +62,4 @@ getManageRoomR = do
     defaultLayout $ do
         aRandomTableId <- newIdent
         $(widgetFile "manage")
+

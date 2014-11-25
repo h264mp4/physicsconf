@@ -3,10 +3,14 @@
     <div class="col-md-2" id="left-nav">
         <div class="row" id="hello-section">
             <div class="col-md-12">
-                ^{userMenuWidget maybeUserInfo}
+                ^{userMenuWidget maybeUser}
                             
-    <!-- the main content -->
+    <!-- already the main content -->
     <div class="col-md-10" id="userProfileEdit">       
         <div class="row">
             <div class="col-md-11 col-md-offset-1">
-               ^{userProfileForm}
+               <h4> 编辑用户: #{uname}
+               <form class="form-horizontal control-label" method=post action=@{UserProfileManageR} enctype=#{formEnctype}>
+                   ^{userProfileForm}
+                   <p> 创建时间: #{createdTime}
+                   <input class="btn btn-primary" type="submit" value="保存">

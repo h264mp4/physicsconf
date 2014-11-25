@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col-md-11 col-md-offset-1">
+      $if null curRecords
+        <h4> 无当前预定信息
+        <br>
+      $else
+        <h4> 当前预定记录
+        <br>
+        <div class="table-responsive">
+            <table id="#{currentBookingTable}" class="table table-hover table-striped"> 
+              <thead>
+                <th>使用者
+                <th>会议室编号
+                <th>日期
+                <th>时间
+                <th>用途
+                <th>
+              <tbody>
+                $forall RepRecord uname rmname day time usage status recordId <- curRecords
+                  <tr>
+                    <td>#{uname}
+                    <td>#{rmname}
+                    <td>#{day}
+                    <td>#{time}
+                    <td>#{usage}
+                    $if status == "已取消"
+                        <td>已取消
+                    $else
+                        <td>
+                            <input type=button value="取消预订" class="btn btn-primary #{cancelBookingClass}" id="#{recordId}"> 
+                                                    
+<div class="row">
+    <br> <!-- separator -->
+    <div class="col-md-12">
+        <hr>
+<div class="row">
+   <div class="col-md-11 col-md-offset-1">
+     $if null historyRecords
+         <h4> 无历史预定信息
+         <br>
+     $else
+         <h4> 历史预定记录
+         <br>
+         <div class="table-responsive">
+             <table id="#{currentBookingTable}" class="table table-hover table-striped"> 
+               <thead>
+                 <th> 使用者
+                 <th> 会议室编号
+                 <th> 日期
+                 <th> 时间
+                 <th> 用途
+                 <th> 
+               <tbody>
+                 $forall RepRecord uname rname day time usage status _ <- historyRecords
+                   <tr>
+                     <td> #{uname}
+                     <td> #{rname}
+                     <td> #{day}
+                     <td> #{time}
+                     <td> #{usage}
+                     <td> #{status} <!-- 预定取消 -->
