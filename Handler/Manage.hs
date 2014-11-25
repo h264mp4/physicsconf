@@ -4,6 +4,7 @@ module Handler.Manage where
 import Import
 import Yesod.Auth
 
+import Handler.MiscTypes
 import Handler.DBOperation
 import CommonWidget
 
@@ -12,24 +13,17 @@ import CommonWidget
 getManageR :: Handler Html
 getManageR =  do 
     maid <- maybeAuthId
-    -- the following code are not used.
     mayUserInfo <- do
         case maid of 
             Nothing -> return Nothing
             Just theEmail -> runDB $ getUserInfoByUniqueUserEmail theEmail
 
-    --let addLink = AddRoomR 
-    --    listLink = ListRoomR 
-    --    editLink = EditRoomR 
-    --    deleteLink = DeleteRoomR 
-    --    dataType = ("typeroom"::Text) 
-    --    buttonName = ("新建会议室":: Text) 
-    let addLink = AddUserR 
-        listLink = ListUserR
-        editLink = EditUserR 
-        deleteLink = DeleteUserR 
-        dataType = ("typeuser"::Text) 
-        buttonName = ("新建用户":: Text) 
+    let addLink = AddRoomR 
+        listLink = ListRoomR 
+        editLink = EditRoomR 
+        deleteLink = DeleteRoomR 
+        dataType = ("typeroom"::Text) 
+        buttonName = ("新建会议室":: Text) 
 
     defaultLayout $ do
         aRandomTableId <- newIdent

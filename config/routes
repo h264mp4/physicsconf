@@ -9,6 +9,7 @@
 
 /userbookingmanage UserBookingManageR GET
 -- /userprofilemanage UserProfileManageR GET
+/cancelbooking CancelBookingR DELETE
 
 /addroom AddRoomR GET POST
 /listroom ListRoomR GET

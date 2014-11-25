@@ -175,8 +175,8 @@ emailNotification aRecord aUser aRoom status = do
 
     -- create the email
     let fromAddress = Address (Just $ T.pack "Conference Room Admin") 
-                              (T.pack "testConfroom@163.com")
-        toAddress   = [Address (Just nameText) emailText]
+                              (T.pack "pekingphyconfadmin@163.com")
+        toAddress   = [ Address (Just nameText) emailText ]
         ccAddress   = []
         bccAddress  = []
         subject     = T.pack (statusText !! 0 ++ ": " ++ "Conference Room " ++ 
@@ -193,7 +193,7 @@ emailNotification aRecord aUser aRoom status = do
 
 getStatusText status | status == BookingSuccess = ["Booking Success Notification", ""]
                      | status == BookingCancel  = ["Booking Cancel Notification", ""]
-                     | otherwise = ["",""]
+                     | otherwise = ["", ""]
 
 timeSpanToTimeString (Timespan start end) = 
                     let startHour = todHour start 
@@ -231,7 +231,7 @@ getUserBookingInfosByUserEmail theEmail bHistory = do
     curDT <- liftIO $ getCurDayAndTime
     let curDay = localDay curDT
         curTime = localTimeOfDay curDT
-        selectOperation = bHistory ? ( (<=.),  (>=.) )
+        selectOperation = bHistory ? ( (<.),  (>=.) )
 
     liftIO $ print "theEmail : "
     liftIO $ print theEmail
@@ -259,7 +259,7 @@ marshalOneRecordToRep (Entity aRid aRecord) = do
                   userNameRep = userName . fromJust $ maybeUser
                 , roomName    = roomNumber . fromJust $ maybeRoom
                 , bookingDay  = T.pack . show . recordDay $ aRecord
-                , occupyTime  = (T.pack . show . todHour . recordStartTime $ aRecord) <> "--"  <>
+                , occupyTime  = (T.pack . show . todHour . recordStartTime $ aRecord) <> " - "  <>
                                 (T.pack . show . todHour . recordEndTime $ aRecord)
                 , bookingUsage    = getRoomUsageInfo aRecord
                 , bookingStatus   = getStatus . recordCancel $ aRecord
@@ -267,7 +267,7 @@ marshalOneRecordToRep (Entity aRid aRecord) = do
              }
                        
      where 
-     getStatus True  = "取消预定"
+     getStatus True  = "已取消"
      getStatus False = ""
 
 -- for user booking status representation in: getUserBookingManageR
