@@ -19,7 +19,7 @@
 /edituser EditUserR GET
 /finishedituser/#UserId FinishEditUserR POST
 /deleteuser DeleteUserR DELETE
--- /managealluserbooking ManageAllUserBookingR GET
+/managealluserbooking ManageAllUserBookingR GET
 
 
 /userbookingmanage UserBookingManageR GET

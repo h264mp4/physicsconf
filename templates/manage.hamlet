@@ -17,11 +17,35 @@
                           <li> 
                               <a href="@{ManageUserR}">用户账户信息管理
                           <li> 
-                              <a href="##">用户预定管理
+                              <a href="@{ManageAllUserBookingR}">用户预定管理
 
           <div class="col-md-9">
+            $if addNew
               ^{listinfoWidget listLink editLink deleteLink dataType buttonName}
               <input type=button value=#{buttonName} class="btn btn-primary" onClick="location.href='@{addLink}'">
+            $else
+              <div class="row">
+                <div class="col-md-3">
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>
+                            <th>姓名
+                            <th>邮箱
+                            <th>
+                        <tbody id="#{userListTalbeId}">
+                          $forall User theEmail _ uname _ _  <- allUsers
+                            <tr>
+                              <td>#{uname}
+                              <td>#{theEmail}
+                              <td>
+                                <input type=button value="管理预订" class="btn btn-primary #{manageBookingClass}" id="#{theEmail}"> 
+                    
+                    <div class="text-center">
+                       <ul class="pagination pagination-lg pager" id="myPager">
+                <div class="col-md-9">
+                    ^{listUserBookingRecordsWidget }
 
     $nothing 
         <div class="row" id="separator">
