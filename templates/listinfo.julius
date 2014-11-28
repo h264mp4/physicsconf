@@ -23,16 +23,16 @@ $(document).ready(function() {
     titleColumns["typeroom"] = [];
     titleColumns["typeuser"] = [];
 
-    titleColumns["typeroom"].push({field: "会议室编号", title: "会议室编号", align:"center"});
-    titleColumns["typeroom"].push({field: "权限", title: "权限", align:"center"});
-    titleColumns["typeroom"].push({field: "启用", title: "启用", align:"center"});
-    titleColumns["typeroom"].push({field: "有效期", title: "有效期", align:"center"});
-    titleColumns["typeroom"].push({field: "sqlkey", title: " ", formatter: editDeleteFunc, align:"center"});
+    titleColumns["typeroom"].push({field: "会议室编号", title: "会议室编号", align:"left"});
+    titleColumns["typeroom"].push({field: "权限", title: "权限", align:"left"});
+    titleColumns["typeroom"].push({field: "启用", title: "启用", align:"left"});
+    titleColumns["typeroom"].push({field: "有效期", title: "有效期", align:"left"});
+    titleColumns["typeroom"].push({field: "sqlkey", title: " ", formatter: editDeleteFunc, align:"left"});
 
-    titleColumns["typeuser"].push({field: "Email", title: "Email", align:"center"});
-    titleColumns["typeuser"].push({field: "姓名", title: "姓名", align:"center"});
-    titleColumns["typeuser"].push({field: "权限", title: "权限", align:"center"});
-    titleColumns["typeuser"].push({field: "sqlkey", title: " ", formatter: editDeleteFunc, align:"center"});
+    titleColumns["typeuser"].push({field: "Email", title: "Email", align:"left"});
+    titleColumns["typeuser"].push({field: "姓名", title: "姓名", align:"left"});
+    titleColumns["typeuser"].push({field: "权限", title: "权限", align:"left"});
+    titleColumns["typeuser"].push({field: "sqlkey", title: " ", formatter: editDeleteFunc, align:"left"});
 
     function setupListTable() {
         //console.log("start setup dataTable.");

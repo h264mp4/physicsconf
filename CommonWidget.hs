@@ -74,6 +74,13 @@ listUserBookingRecordsWidget theUserId = do
     cancelBookingClass  <- handlerToWidget newIdent
     $(widgetFile "listuserbooking")
 
+listUserBookingRecordsByEmailWidget :: Text -> Widget
+listUserBookingRecordsByEmailWidget theEmail = do
+    maybeUser <- handlerToWidget $ runDB $ getBy $ UniqueEmail theEmail
+    case maybeUser of
+        Just (Entity theUserId _) -> listUserBookingRecordsWidget theUserId
+        Nothing ->  toWidget [hamlet| <p> 用户信息错误，不存在 #{theEmail} |]
+    
 -- @{UserProfileManageR}
 
 ------------------------------------------------------------------------------------------

@@ -282,5 +282,4 @@ data RepRecord = RepRecord {
      ,bookingUsage    :: Text
      ,bookingStatus   :: Text -- whether canceld
      ,bookingRecordId :: Text -- T.pack . show . fromSqlKey $ recordId 
-
      } deriving (Show)
