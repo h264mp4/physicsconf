@@ -2,7 +2,6 @@
     <div class="col-md-11 col-md-offset-1">
       $if null curRecords
         <h4> 无当前预定信息
-        <br>
       $else
         <h4> 当前预定记录
         <br>

@@ -4,6 +4,7 @@ module Handler.Manage where
 import Import
 import Yesod.Auth
 import Database.Persist.Sql
+import Text.Julius(rawJS)
 
 import qualified Data.Text as T
 

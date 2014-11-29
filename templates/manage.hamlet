@@ -13,9 +13,11 @@
                   <div class="col-md-12" id="manageNav">
                       <ul class="nav nav-pills nav-stacked">
                           <li> 
+                              <a href="@{HomeR}">首页
+                          <li> 
                               <a href="@{ManageRoomR}">会议室管理
                           <li> 
-                              <a href="@{ManageUserR}">用户账户信息管理
+                              <a href="@{ManageUserR}">用户账户管理
                           <li> 
                               <a href="@{ManageAllUserBookingR}">用户预定管理
 
@@ -25,27 +27,32 @@
                   <input type=button value=#{buttonName} class="btn btn-primary" onClick="location.href='@{addLink}'">
               $else
                   <div class="row">
-                      <div class="col-md-3">
+                      <div class="col-md-10">
                           <div class="table-responsive">
                               <table class="table table-hover">
                                 <thead>
-                                  <tr>
-                                    <th>
+                                  <tr>                 
                                     <th>姓名
                                     <th>邮箱
                                     <th>
                                 <tbody id="#{userListTableId}">
                                   $forall User theEmail _ uname _ _ <- userInfos
                                     <tr>
-                                      <td>#{show uname}
-                                      <td>#{show theEmail}
+                                      <td>#{uname}
+                                      <td>#{theEmail}
                                       <td>
                                         <input type=button value="管理预订" id="#{theEmail}" class="btn btn-primary #{manageBookingClass}"> 
                                
                           <div class="text-center">
                              <ul class="pagination pagination-lg pager" id="myPager">
-                          <div class="col-md-9">
-                              ^{listUserBookingRecordsByEmailWidget theEmailStr}
+                  <div class="row">
+                      <hr style="height:'20px'; color: '#FF0000'; width: '100%'">
+                      <br>
+                  <div class="row">
+                      <h4> #{theEmailStr} 的预定情况:
+                  <div class="row">
+                      <div class="col-md-10">
+                          ^{listUserBookingRecordsByEmailWidget theEmailStr}
 
     $nothing 
         <div class="row" id="separator">
