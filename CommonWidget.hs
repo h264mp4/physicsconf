@@ -10,6 +10,7 @@ import Text.Julius(rawJS)
 import qualified Data.Text as T
 
 import Handler.DBOperation
+import Handler.MiscTypes
 
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
@@ -47,6 +48,10 @@ userMenuWidget maybeUser = toWidget [hamlet|
                     <a href="@{UserBookingManageR}">我的预订管理
                 <li> 
                     <a href="@{UserProfileManageR}">个人信息设置
+                $if userLevel userInfo == AuthAdmin
+                    <li> 
+                        <a href="@{ManageR}">预定系统管理
+                 
 
         <div class="row">
              <hr width="90%">                          
@@ -94,9 +99,10 @@ jqueryDayField2 jds = Field
               . readMay
               . T.unpack
     , fieldView = \theId name attrs val isReq -> do
+        let inputType = "text" :: Text
         toWidget [shamlet|
 $newline never
-<input id="#{theId}" name="#{name}" *{attrs} type="text" :isReq:required="" value="#{showVal val}">
+<input id="#{theId}" name="#{name}" *{attrs} type="#{inputType}" :isReq:required="" value="#{showVal val}">
 |]
         --addScript' urlJqueryJs
         --addScript' urlJqueryUiJs

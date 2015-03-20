@@ -227,7 +227,6 @@ getOnePieceInfoByDBId theId = do
 
 -- lookup a user's booking info: little complex, return a list of [(recordId, Record, User, Room)]
 -- uniqueKey could be [roomId or userId]
-
 getUserBookingInfosByUserId theUserId bHistory = do
     getOneUserBookingInfos theUserId bHistory    
 

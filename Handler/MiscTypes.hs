@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveGeneric, TemplateHaskell #-}
 module Handler.MiscTypes where
 
 import Prelude
