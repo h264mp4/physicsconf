@@ -12,7 +12,7 @@ import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
 import qualified Settings
 import Settings.Development (development)
 import qualified Database.Persist
-import Database.Persist.Sql (SqlBackend)
+import Database.Persist.Sql (SqlBackend, insert)
 import Settings.StaticFiles
 import Settings (widgetFile, Extra (..))
 import Model
@@ -228,8 +228,20 @@ doAuthAndGetUserInfo = do
 
 verifyUserWithPassword theEmail thePassword = do
     mayInfo <- getBy $ UniqueEmail theEmail 
-    case mayInfo of
-        Nothing -> liftIO $ print "invalid username" >> return Nothing
+    case mayInfo of	    
+        Nothing -> do   
+                   curTime <- liftIO $ getCurrentTime		
+		           -- we set a default admin user: pekingphyconfadmin@163.com - pekingphyconfadmin as password.
+                   if theEmail == "pekingphyconfadmin@163.com" && thePassword == "pekingphyconfadmin"
+                      then do 
+                           let firstAdmin = User { userEmail = "pekingphyconfadmin@163.com",	
+                                                   userPassword = "pekingphyconfadmin",
+                                                   userName = "系统管理员",
+                                                   userLevel = AuthAdmin,
+                                                   userFirstAdd = curTime}
+                           insert firstAdmin
+                           return $ Just firstAdmin					   
+                      else (liftIO $ print "invalid username") >> return Nothing
         Just (Entity _ aUser) -> do
             if userPassword aUser == thePassword
                then return . Just $ aUser
