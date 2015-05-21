@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     function getDateStr(dateObj) {
         var year = dateObj.getUTCFullYear();
-        var month = dateObj.getUTCMonth() + 1; //months from 1-12
+        var month = dateObj.getUTCMonth() + 1; //months 0-11, so add 1: 1-12
         var day = dateObj.getUTCDate();
         var newDate = year + "-" + month + "-" + day;
         return newDate; 
@@ -92,7 +92,7 @@ $(document).ready(function() {
             },
 
             responseHandler: function(retData){
-                console.log(retData.dataRows);
+                //console.log(retData.dataRows);
                 return retData.dataRows;
             },
 
@@ -159,6 +159,6 @@ $(document).ready(function() {
     /////////////////////////////////////////////////////////////////////////////////
     //// Here we start execute.
     // we setup the initial dataTable
-    setupDataTable(queryDate);
     showCurrentQueryDate(queryDate);
+    setupDataTable(queryDate);    
 });

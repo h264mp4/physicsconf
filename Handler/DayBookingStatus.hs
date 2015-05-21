@@ -3,7 +3,7 @@ module Handler.DayBookingStatus where
 
 import Import
 import qualified Data.Text as T
-
+import Control.Concurrent (threadDelay)
 import Handler.DBOperation
 import Handler.MiscTypes
 import Handler.Utils
@@ -17,15 +17,19 @@ toJsonRet rows = object $ [tableDataName .= toDataRows rows,
                            "total" .= toJSON (length rows) ]
 
 getDayBookingStatusR :: Handler Value -- actually return a json.
-getDayBookingStatusR = do
-    maybeDayStr <- lookupGetParam "queryDay"
-    maybeRoomIdStr <- lookupGetParam "queryRoomId"
+getDayBookingStatusR = do    
+    !getParameters <- reqGetParams <$> getRequest
+    liftIO $ print getParameters
+    let !maybeDayStr = lookup "queryDay" getParameters :: Maybe Text
+        !maybeRoomIdStr = lookup "queryRoomId" getParameters :: Maybe Text
+    -- maybeDayStr <- lookupGetParam "queryDay"
+    -- maybeRoomIdStr <- lookupGetParam "queryRoomId"
     let maybeRoomId = mayStrToSqlKey maybeRoomIdStr
         maybeDay    = mayStrToDay maybeDayStr
 
     liftIO $ print "inside getDayBookingStatusR: "    
-    liftIO $ print maybeDay 
-    liftIO $ print maybeRoomId 
+    liftIO $ print maybeDay
+    liftIO $ print maybeRoomId
 
     case maybeDay of
         Nothing -> sendResponseStatus status404 ("Not a valid day" :: Text)

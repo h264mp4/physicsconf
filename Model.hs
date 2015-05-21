@@ -95,6 +95,6 @@ mayStrToDay mayDayStr =
         Nothing -> Nothing
         Just dayText -> 
              let ymd = map (read . T.unpack) $ T.splitOn "-" dayText
-                 in if (T.length dayText /= 10) || (length ymd /= 3)
+                 in if (length ymd /= 3)
                     then Nothing 
                     else Just $ fromGregorian (fromIntegral $ ymd!!0) (ymd!!1) (ymd!!2)
