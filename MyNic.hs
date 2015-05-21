@@ -6,6 +6,7 @@
 -- | Provide the user with a rich text editor.
 module MyNic (myNicHtmlField) where
 
+import Import
 import Yesod.Core
 import Yesod.Form
 import Text.HTML.SanitizeXSS (sanitizeBalance)
