@@ -227,7 +227,9 @@ doAuthAndGetUserInfo = do
     return maybeUserInfo
 
 verifyUserWithPassword theEmail thePassword = do
-    mayInfo <- getBy $ UniqueEmail theEmail 
+    mayInfo <- getBy $ UniqueEmail theEmail
+    liftIO $ print theEmail
+    liftIO $ print thePassword 
     case mayInfo of	    
         Nothing -> do   
                    curTime <- liftIO $ getCurrentTime		

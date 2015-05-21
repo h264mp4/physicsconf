@@ -20,7 +20,7 @@ $newline never
         \<!--[if lt IE 9]>
         \<script src="/static/js/html5shiv.3.7.4.min.js"></script>
         \<script src="/static/js/respond.1.4.2.min.js"></script>
-        \<script> alert("抱歉，您正使用低版本IE，我们可能无法正确支持。建议使用IE 10, IE 11, Firefox, Google Chrome 或 360浏览器（急速模式）。"); </script>
+        \<script> alert("抱歉，您正使用低版本IE，我们可能无法正确支持。建议使用IE 10, IE 11, Firefox, Google Chrome 或 360浏览器（极速模式）。"); </script>
         \<![endif]-->
 
         <script>
