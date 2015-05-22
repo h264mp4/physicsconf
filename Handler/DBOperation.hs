@@ -38,6 +38,7 @@ addNewUser newUser = do
                return Nothing
        else do
             newUserId <- insert newUser
+            liftIO $ forkIO $ emailUserInfo newUser "Your Confrence Room Booking Account Info In School of Physics "
             return $ Just newUserId
 
 updateUserProfile theUserId newInfo = do
@@ -46,6 +47,7 @@ updateUserProfile theUserId newInfo = do
                        UserPassword =. (userPassword newInfo),
                        UserLevel    =. (userLevel newInfo)
                      ]
+    liftIO $ forkIO $ emailUserInfo newInfo "Confrence Room Booking Account Changing Notification"
     return ()
 
 listUserProfile = do
@@ -203,6 +205,34 @@ timeSpanToTimeString (Timespan start end) =
                         endMin  = todMin end
                      in (show startHour ++ ":" ++ show startMin,
                          show endHour ++ ":" ++ show endMin)
+
+emailUserInfo :: User -> Text -> IO ()
+emailUserInfo aUser title = do
+    let adminUserName = "pekingphyconfadmin" -- 163 username and passphrase
+        adminPassword = "asdfgh"
+        viaHost       = "smtp.163.com"
+        viaPort       = 25
+
+    let emailText  = userEmail aUser
+        nameText   = userName  aUser
+        passwordText = userPassword aUser
+
+    -- create the email
+    let fromAddress = Address (Just $ T.pack "Conference Room Admin") 
+                              (T.pack "pekingphyconfadmin@163.com")
+        toAddress   = [ Address (Just nameText) emailText ]
+        ccAddress   = []
+        bccAddress  = []
+        subject     = title
+        allParts    = plainTextPart (("Don't Reply This Email.\nYour User Name: ") <> 
+                                      (TL.fromStrict emailText) <> ("\nYour User Password: ") <>
+                                      (TL.fromStrict passwordText) <> ("\nYour Name: ") <>
+                                      (TL.fromStrict nameText))
+        theMail     = simpleMail fromAddress toAddress ccAddress bccAddress subject [allParts]
+
+    sendMailWithLogin viaHost adminUserName adminPassword theMail 
+    return ()  
+
 
 ------------------------------------------------------------------------------------------
 -- | Lookup functions

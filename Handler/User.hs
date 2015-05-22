@@ -143,7 +143,7 @@ editUserForm :: User -> Form User
 editUserForm userInfo = renderBootstrap3 commonSimpleFormLayout $ User
         <$> pure (userEmail userInfo)
         <*> pure (userPassword userInfo)
-        <*> areq textField "姓名" (Just $ userName userInfo)
+        <*> areq textField "姓名" (Just $ userName userInfo) -- pure (userName userInfo)
         <*> areq (selectFieldList authLevel) "权限" (Just $ userLevel userInfo)
         <*> pure (userFirstAdd userInfo)
 

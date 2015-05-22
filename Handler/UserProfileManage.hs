@@ -44,7 +44,6 @@ getUserProfileManageR = do
                     defaultLayout $ do
                         toWidget $(widgetFile "userprofilemanage")
 
-
 postUserProfileManageR :: Handler Html
 postUserProfileManageR = do
     maid <- maybeAuthId
@@ -73,8 +72,26 @@ postUserProfileManageR = do
 userProfileMangeForm :: User -> Form User
 userProfileMangeForm aUser = renderBootstrap3 commonSimpleFormLayout $ 
     User
-        <$> pure (userEmail aUser) 
-        <*> pure (userPassword aUser)
-        <*> areq textField "姓名" (Just $ userName aUser)
+        <$> pure (userEmail aUser)
+        <*> areq passwordConfirmField "新密码" Nothing
+        <*> areq textField "姓名" (Just $ userName aUser)            
         <*> pure (userLevel aUser)
         <*> pure (userFirstAdd aUser)
+
+passwordConfirmField :: Field Handler Text
+passwordConfirmField = Field
+    { fieldParse = \rawVals _fileVals ->
+        case rawVals of
+            [a, b]
+                | a == b -> return $ Right $ Just a
+                | otherwise -> return $ Left "Passwords don't match"
+            [] -> return $ Right Nothing
+            _ -> return $ Left "You must enter two values"
+    , fieldView = \idAttr nameAttr otherAttrs eResult isReq ->
+        [whamlet|
+            <input id=#{idAttr} name=#{nameAttr} *{otherAttrs} type=password>
+            <div>确认:
+            <input id=#{idAttr}-confirm name=#{nameAttr} *{otherAttrs} type=password>
+        |]
+    , fieldEnctype = UrlEncoded
+    }

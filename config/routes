@@ -29,3 +29,6 @@
 /manage ManageR GET
 /manage/room ManageRoomR GET
 /manage/user ManageUserR GET
+
+-- /confroomintro ConfRoomIntroR Get
+-- /confroombulletin ConfRommBulletinR Get

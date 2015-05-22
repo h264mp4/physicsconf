@@ -13,4 +13,4 @@
                <h6> 创建时间: #{createdTime}
                <form class="form-horizontal control-label" method=post action=@{UserProfileManageR} enctype=#{formEnctype}>
                    ^{userProfileForm}                   
-                   <input class="btn btn-primary" type="submit" value="保存">
+                   <input class="btn btn-primary" type="submit" value="确认修改">
