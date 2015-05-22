@@ -35,4 +35,8 @@ DayRecords
     UniqueDay day 
     deriving Show
 
+Bulletin
+    createTime UTCTime
+    
+
 -- By default this file is used in Model.hs (which is imported by Foundation.hs)

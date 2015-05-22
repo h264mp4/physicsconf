@@ -29,6 +29,7 @@ data InfoKey = InfoUser | InfoRoom | InfoRecord
 -- | User Operaions: addNewUser editUserProfile deleteUser
 addNewUser newUser = do
     --runMigration migrateAll
+    liftIO $ print newUser
     userExist <- selectList [UserEmail ==. (userEmail newUser)] [LimitTo 1]
     if not (null userExist)
        then do let errMsg = "User" ++ (show $ userEmail newUser) ++

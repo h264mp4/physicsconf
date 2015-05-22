@@ -123,7 +123,7 @@ newbookingForm :: UserId -> Maybe Day -> Maybe RoomId -> [(Text, RoomId)] -> For
 newbookingForm theUserId theDay theRoom roomPairs = renderBootstrap3 commonSimpleFormLayout $ 
     Record
         <$> pure theUserId
-        <*> areq (jqueryDayField  def{jdsChangeMonth = True}) daySetting theDay 
+        <*> areq (jqueryDayField2 def{jdsChangeMonth = True}) daySetting theDay 
         <*> areq (selectFieldList roomPairs) roomSetting theRoom
         <*> areq (selectFieldList hourStartPairs) startDaySetting Nothing
         <*> areq (selectFieldList hourEndPairs) endDaySetting Nothing

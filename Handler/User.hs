@@ -10,8 +10,11 @@ import Data.Maybe(isJust, fromJust)
 import Yesod.Form.Bootstrap3 
 import Database.Persist.Sql(toSqlKey)
 
-import qualified Data.Text as T (unpack)
+import qualified Data.Text as T 
+import System.IO.Unsafe(unsafePerformIO)
 import Data.Conduit
+import Data.Time
+import System.Locale
 import Data.Text.Encoding(encodeUtf8)
 import Data.ByteString.Lazy(fromStrict)
 import qualified Data.Conduit.Text as CT
@@ -92,7 +95,7 @@ postFinishEditUserR theId = do
                 backNavWidget ("用户信息已更新" :: Text) 
                                    (toHtmlUserInfo formInfo) ManageUserR
         _ -> defaultLayout $ do
-                 backNavWidget emptyText ("无效的用户信息, 请重新输入." :: Text) ManageUserR
+                backNavWidget emptyText ("无效的用户信息, 请重新输入." :: Text) ManageUserR
 
 deleteDeleteUserR :: Handler Value
 deleteDeleteUserR = do
@@ -116,11 +119,22 @@ deleteDeleteUserR = do
 
 ------------------------------------------------------------------------------
 ---- other helpers
+-- used to generate a pudo-random int
+getAPassword = unsafePerformIO randomPW
+  where
+    randomPW :: IO Text
+    randomPW = do 
+       curUtcTime <- getCurrentTime
+       let seconds = formatTime defaultTimeLocale "%s" curUtcTime :: String
+           secondsNumber = read seconds :: Int
+           digitNumber = secondsNumber `mod` 8
+           eightNumbers = T.take 8 . T.pack $ ((drop digitNumber seconds) ++ seconds)
+       return eightNumbers
 
 addUserForm :: Form User
 addUserForm = renderBootstrap3 commonSimpleFormLayout $ User
         <$> areq emailField "电子邮箱" Nothing
-        <*> pure "asd" -- areq textField "密码" (Just "physics")
+        <*> pure getAPassword -- "asd" -- areq textField "密码" (Just "physics")
         <*> areq textField "姓名" Nothing
         <*> areq (selectFieldList authLevel) "权限" Nothing
         <*> lift (liftIO getCurrentTime)
