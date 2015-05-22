@@ -313,3 +313,15 @@ data RepRecord = RepRecord {
      ,bookingStatus   :: Text -- whether canceld
      ,bookingRecordId :: Text -- T.pack . show . fromSqlKey $ recordId 
      } deriving (Show)
+
+
+----------------------------------------------------------------------------------------------
+---- bulletin relate operations
+-- return content text
+getBulletinContent = do
+    bulletins <- selectList [] [BulletinContent, LimitTo 1]    
+    case null bulletins of
+        True -> do
+                   liftIO $ print "no bulletin content."
+                   return ""
+        False -> return . bulletinContent $ bulletins !! 0

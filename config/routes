@@ -30,5 +30,5 @@
 /manage/room ManageRoomR GET
 /manage/user ManageUserR GET
 
--- /confroomintro ConfRoomIntroR Get
--- /confroombulletin ConfRommBulletinR Get
+/confroombulletin ConfRommBulletinR Get
+/editroombulletin EditRoomBulletinR Get Post

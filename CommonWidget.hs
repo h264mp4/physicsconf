@@ -51,7 +51,7 @@ userMenuWidget maybeUser = toWidget [hamlet|
                 $if userLevel userInfo == AuthAdmin
                     <li> 
                         <a href="@{ManageR}">预定系统管理
-                 
+                        <a href="@{EditRoomBulletinR}>编辑会议室使用公告
 
         <div class="row">
              <hr width="90%">                          
@@ -61,13 +61,10 @@ userMenuWidget maybeUser = toWidget [hamlet|
             <pre>
                 <h4>请<a href=@{AuthR LoginR}>登入</a>进行预定
                 
-
     <div class="row" id="intros">
         <ul class="nav nav-pills nav-stacked">
             <li> 
-                <a href="##">会议室预订介绍
-            <li> 
-                <a href="##">其他介绍
+                <a href=@{ConfRoomBulletinR}> 会议室使用公告
 |]
 
 listUserBookingRecordsWidget :: UserId -> Widget

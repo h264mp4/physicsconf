@@ -36,7 +36,9 @@ DayRecords
     deriving Show
 
 Bulletin
+    content    Text
+    modifyTime UTCTime
     createTime UTCTime
-    
+
 
 -- By default this file is used in Model.hs (which is imported by Foundation.hs)
