@@ -88,8 +88,7 @@ instance Yesod App where
                  , js_bootstrap_3_2_0_js
                  , js_moment_2_8_3_min_js
                  , js_bootstrap_table_min_js
-                 , kalendae_kalendae_standalone_js
-                 , js_mynicedit_js
+                 , kalendae_kalendae_standalone_js                 
                  -- , js_html5shiv_3_7_4_min_js
                  -- , js_respond_1_4_2_min_js
                  ])

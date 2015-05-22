@@ -20,7 +20,6 @@ library
                      Settings.StaticFiles
                      Settings.Development
                      CommonWidget
-                     MyNic
                      Handler.DBOperation
                      Handler.Home
                      Handler.Utils
