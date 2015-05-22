@@ -319,9 +319,11 @@ data RepRecord = RepRecord {
 ---- bulletin relate operations
 -- return content text
 getBulletinContent = do
-    bulletins <- selectList [] [BulletinContent, LimitTo 1]    
+    bulletins <- selectList [] [Asc BulletinContent]    
     case null bulletins of
         True -> do
-                   liftIO $ print "no bulletin content."
-                   return ""
-        False -> return . bulletinContent $ bulletins !! 0
+                liftIO $ print "no bulletin content."
+                return ""
+        False -> do
+                 let (Entity _ bulletin) = (bulletins !! 0)
+                 return $ bulletinContent bulletin

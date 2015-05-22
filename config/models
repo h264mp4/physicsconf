@@ -36,7 +36,7 @@ DayRecords
     deriving Show
 
 Bulletin
-    content    Text
+    content    Text Asc
     modifyTime UTCTime
     createTime UTCTime
 

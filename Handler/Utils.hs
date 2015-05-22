@@ -49,3 +49,11 @@ commonSimpleFormLayout = BootstrapHorizontalForm
                              ,bflInputOffset = ColMd 0
                              ,bflInputSize   = ColMd 4
                          }
+
+bulletinFormLayout = BootstrapHorizontalForm
+                         {
+                              bflLabelOffset = ColMd 0
+                             ,bflLabelSize   = ColMd 0
+                             ,bflInputOffset = ColMd 0
+                             ,bflInputSize   = ColMd 12
+                         }                         
