@@ -327,3 +327,8 @@ getBulletinContent = do
         False -> do
                  let (Entity _ bulletin) = (bulletins !! 0)
                  return $ bulletinContent bulletin
+
+updateBulletinContent content = do
+    curTime <- liftIO $ getCurrentTime
+    insert $ Bulletin content curTime
+    return ()

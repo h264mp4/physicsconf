@@ -92,6 +92,7 @@ library
                  , http-types                    >= 0.8.5
                  , blaze-html                    >= 0.8.0.2
                  , xss-sanitize                  >= 0.3.5.5
+                 , blaze-markup                  >= 0.7.0.2
     -- see https://github.com/yesodweb/yesod/issues/814
     if !os(windows)
         build-depends: unix

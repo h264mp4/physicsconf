@@ -21,10 +21,15 @@ import Data.ByteString.Lazy(fromStrict)
 import qualified Data.Conduit.Text as CT
 import qualified Data.Conduit.List as CL
 import Data.Aeson(ToJSON(..), object, (.=), decode)
+--import Text.Blaze (ToMarkup (toMarkup), unsafeByteString)
+import Text.Blaze.Html (toHtml)
 
 getConfRoomBulletinR :: Handler Html
 getConfRoomBulletinR = do
-    content <- runDB $ getBulletinContent
+    rawContent <- runDB $ getBulletinContent
+    liftIO $ print rawContent
+    let !content = toHtml rawContent  
+    -- let content = T.intercalate "</p><p>" . T.lines $ rawContent
     defaultLayout $ do
         $(widgetFile "bulletin")
 
@@ -44,16 +49,29 @@ postEditRoomBulletinR = do
     ((result, formWidget), formEnctype) <- runFormPost (bulletinEditForm content)
     case result of
         FormSuccess formInfo -> do
-            -- liftIO $ print (bulletinEditContent formInfo)    
+            -- liftIO $ print (bulletinEditContent formInfo) 
+            runDB $ updateBulletinContent (unTextarea $ bulletinEditContent formInfo)
             defaultLayout $ do
-                backNavWidget ("会议室公告更新完成" :: Text) 
-                                   ("ok") HomeR
+                backNavWidget ("会议室公告更新完成" :: Text) ("") HomeR
         _ -> defaultLayout $ do
                 backNavWidget emptyText ("内部错误，请重新编辑" :: Text) HomeR
+
+
+{-
+FieldSettings    
+fsLabel :: SomeMessage master,
+fsTooltip :: Maybe (SomeMessage master),
+fsId :: Maybe Text,
+fsName :: Maybe Text,
+fsAttrs :: [(Text, Text)]
+-}
+
+bulletinSetting = FieldSettings "" Nothing Nothing Nothing 
+                       [("style", "width:500px; height:600px")] --("type","text")
 
 data BulletinText = BulletinText { bulletinEditContent :: Textarea}
 
 bulletinEditForm :: Text -> Form BulletinText
 bulletinEditForm content = renderBootstrap3 bulletinFormLayout $ 
     BulletinText       
-        <$> areq textareaField "" (Just $ Textarea content)
+        <$> areq textareaField bulletinSetting (Just $ Textarea content)

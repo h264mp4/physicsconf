@@ -38,7 +38,6 @@ DayRecords
 Bulletin
     content    Text Asc
     modifyTime UTCTime
-    createTime UTCTime
 
 
 -- By default this file is used in Model.hs (which is imported by Foundation.hs)

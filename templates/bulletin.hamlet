@@ -2,5 +2,5 @@
     <div class="col-md-8">
         <h3> 会议室使用公告
     <div class="col-md-8">
-        <p> #{content}</p>
+        <p>#{content} 
         <input type=button value="返回" class="btn btn-info" onClick="location.href='@{HomeR}'">
