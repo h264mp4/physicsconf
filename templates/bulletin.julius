@@ -1,0 +1,14 @@
+$(document).ready(function() {
+    function replaceNewlineWithBr(){
+        //contentStr = document.getElementById("##{rawJS bulletinId}").value;
+        //alert((baz.match(/\r/) && 'CR') + ' ' + (baz.match(/\n/) && 'LF'));
+        //contentHtml = contentStr.replace(/(\r\n|\n|\r)/gm, "<br>");
+        
+        contentStr = $("##{rawJS bulletinId}").text(); 
+        // console.log(contentStr);
+        contentHtml = contentStr.replace(/(\r\n|\n|\r)/gm, "<br>");
+        $("##{rawJS bulletinId}").html(contentHtml); 
+        console.log("done");        
+    };
+    replaceNewlineWithBr();
+});

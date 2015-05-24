@@ -10,6 +10,7 @@ import Data.Maybe(isJust, fromJust)
 import Yesod.Form.Bootstrap3 
 import Database.Persist.Sql(toSqlKey)
 import Yesod.Form
+import Text.Julius(rawJS)
 
 import qualified Data.Text as T 
 import System.IO.Unsafe(unsafePerformIO)
@@ -27,10 +28,11 @@ import Text.Blaze.Html (toHtml)
 getConfRoomBulletinR :: Handler Html
 getConfRoomBulletinR = do
     rawContent <- runDB $ getBulletinContent
-    liftIO $ print rawContent
-    let !content = toHtml rawContent  
-    -- let content = T.intercalate "</p><p>" . T.lines $ rawContent
+    --liftIO $ print rawContent
+    --let !content = toHtml rawContent  
+    let content = rawContent   
     defaultLayout $ do
+        bulletinId <- newIdent
         $(widgetFile "bulletin")
 
 getEditRoomBulletinR :: Handler Html
